@@ -9,9 +9,9 @@ export class CacheEvent {
 }
 
 export type wgSalaryType = {
-  leadSalary: number;
-  workerSalary: number;
-  daoSpendingBudget: number;
+  regularSalaries: number;
+  discretionarySpending: number;
+  leadRewards: number;
 };
 
 export type WorkingGroup = {

@@ -804,20 +804,12 @@ export const getWorkerByMemberId = async (memberId: string) => {
 
 export const getCouncilReward = async (start: number, end: number) => {
   const { GetCouncilReward, GetCouncilRewardTotalCount } = getSdk(client);
-  const {
-    rewardPaymentEventsConnection: { totalCount },
-  } = await GetCouncilRewardTotalCount({
-    where: {
-      inBlock_gte: start,
-      inBlock_lte: end,
-    },
-  });
   const { rewardPaymentEvents } = await GetCouncilReward({
     where: {
-      inBlock_gte: start,
+      inBlock_gt: start, // start block rewards are still for old council!
       inBlock_lte: end,
     },
-    limit: totalCount,
+    limit: 5000,
   });
   const councilReward = rewardPaymentEvents.map((r) => {
     return {
@@ -861,13 +853,13 @@ export const getCreatorPayoutReward = async (start: number, end: number) => {
     channelRewardClaimedEventsConnection: { totalCount },
   } = await GetCreatorPayoutRewardTotalCount({
     where: {
-      inBlock_gte: start,
+      inBlock_gt: start,
       inBlock_lte: end,
     },
   });
   const { channelRewardClaimedEvents } = await GetCreatorPayoutReward({
     where: {
-      inBlock_gte: start,
+      inBlock_gt: start,
       inBlock_lte: end,
     },
     limit: totalCount,
@@ -885,13 +877,13 @@ export const getFundingProposal = async (start: number, end: number) => {
     requestFundedEventsConnection: { totalCount },
   } = await getFundingProposalTotalCount({
     where: {
-      inBlock_gte: start,
+      inBlock_gt: start,
       inBlock_lte: end,
     },
   });
   const { requestFundedEvents } = await getFundingProposals({
     where: {
-      inBlock_gte: start,
+      inBlock_gt: start,
       inBlock_lte: end,
     },
     limit: totalCount,
@@ -903,41 +895,66 @@ export const getFundingProposal = async (start: number, end: number) => {
   return toJoy(paid);
 };
 
-// wg spending budget
-export const getWGSpendingBudget = async (start: number, end: number) => {
-  const { GetBudgetSpending, GetBudgetSpendingEventsTotalCount } =
-    getSdk(client);
-  const spendingBudget = {} as {
+// discretionary spending from WGs budgets
+export const getWGBudgetSpending = async (start: number, end: number) => {
+  const { GetBudgetSpending } = getSdk(client);
+  const budgetSpendingPerWG = {} as {
     [key in GroupIdName]: number;
   };
   const promises = Object.keys(GroupIdToGroupParam).map(async (_group) => {
-    const {
-      budgetSpendingEventsConnection: { totalCount },
-    } = await GetBudgetSpendingEventsTotalCount({
-      where: {
-        inBlock_gte: start,
-        inBlock_lte: end,
-        group: { id_eq: _group },
-      },
-    });
     const { budgetSpendingEvents } = await GetBudgetSpending({
       where: {
-        inBlock_gte: start,
+        inBlock_gt: start,
         inBlock_lte: end,
         group: { id_eq: _group },
       },
-      limit: totalCount,
+      limit: 5000,
     });
-    spendingBudget[_group as GroupIdName] = budgetSpendingEvents
+    budgetSpendingPerWG[_group as GroupIdName] = budgetSpendingEvents
       .map((b) => new BN(b.amount))
       .reduce((a, b) => a + toJoy(b), 0);
   });
   await Promise.all(promises);
-  return spendingBudget;
+  return budgetSpendingPerWG;
+};
+
+// worker rewards per WG per worker
+export const getWGWorkersRewards = async (start: number, end: number) => {
+  const { GetRewards } = getSdk(client);
+  const rewardsPerWGPerWorker = {} as {
+    [key in GroupIdName]: {
+      [key in string]: number;
+    };
+  };
+  const promises = Object.keys(GroupIdToGroupParam).map(async (_group) => {
+    const { rewardPaidEvents } = await GetRewards({
+      where: {
+        inBlock_gt: start,
+        inBlock_lte: end,
+        group: {
+          id_eq: _group,
+        },
+      },
+      limit: 5000,
+    });
+    const rewardsPerWorker = {} as {
+      [key in string]: number;
+    };
+    rewardPaidEvents.map((r) => {
+      const amount = toJoy(new BN(r.amount));
+      if (rewardsPerWorker[r.worker.runtimeId]) {
+        rewardsPerWorker[r.worker.runtimeId] += amount;
+      } else {
+        rewardsPerWorker[r.worker.runtimeId] = amount;
+      }
+    });
+    rewardsPerWGPerWorker[_group as GroupIdName] = rewardsPerWorker;
+  });
+  await Promise.all(promises);
+  return rewardsPerWGPerWorker;
 };
 
 // wg refill proposal budget
-
 export const getWGRefillProposal = async (start: Date, end: Date) => {
   const { getProposals, getProposalTotalCount } = getSdk(client);
   const {

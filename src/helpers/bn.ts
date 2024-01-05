@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BN_TEN, BN_TWO, BN_ZERO } from "@polkadot/util";
 import BN from "bn.js";
+import { formatUnits } from "@ethersproject/units";
 
 type BNParam = number | string | number[] | Uint8Array | Buffer | BN;
 
@@ -17,9 +18,9 @@ export const powerOf10 = (value: any) => BN_TEN.pow(asBN(value));
 export const powerOf2 = (value: any) => BN_TWO.pow(asBN(value));
 
 export const toJoy = (value: BN): number => {
-  return value.div(powerOf10(10)).toNumber();
+  return parseFloat(formatUnits(value.toString(), 10));
 };
 
 export const string2Joy = (value: string): number => {
-  return Number(value) / Math.pow(10, 10);
+  return toJoy(new BN(value));
 };

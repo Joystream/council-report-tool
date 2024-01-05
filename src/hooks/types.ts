@@ -1,5 +1,6 @@
 import { ElectedCouncil } from "@/types";
 import { GroupShortIDName, OverallBudgetKeys } from "@/types";
+import { wgSalaryType } from "@/api/rpc/type";
 
 export interface ForSelectedCouncil {
   council?: ElectedCouncil;
@@ -55,7 +56,5 @@ export type wgBudgetType = {
   startWGBudget: number;
   endWGBudget: number;
   refillBudget: number;
-  workerRewards: number;
-  leadRewards: number;
-  actualSpending: number;
-};
+  totalSpending: number;
+} & wgSalaryType;

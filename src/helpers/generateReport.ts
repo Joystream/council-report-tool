@@ -458,8 +458,8 @@ export async function generateReport4(
       const endElectedInflation =
         ((endElectedIssuance - INITIAL_SUPPLY) / INITIAL_SUPPLY) * 100;
       const inflationChanged = endElectedInflation - startElectedInflation;
-      inflation_tmp.inflation = decimal3DAdjust(inflationChanged);
-      inflation_tmp.mintedToken = decimalAdjust(changedIssuanceOfElection);
+      inflation_tmp.inflation = inflationChanged;
+      inflation_tmp.mintedToken = changedIssuanceOfElection;
       projectInflations.push(inflation_tmp);
     }
   });
@@ -483,8 +483,8 @@ export async function generateReport4(
     endBlock: endIssuance,
     changedIssuance: issuanceChange,
     Inflation: inflationChange,
-    yearMintedToken: decimalAdjust(yearMintedToken),
-    yearInflation: decimal3DAdjust(yearInflation),
+    yearMintedToken: yearMintedToken,
+    yearInflation: yearInflation,
   };
 
   const { wgWorkerStatus, wgWorkerTotal } = await getWGWorkerStatus(
@@ -574,9 +574,10 @@ export async function generateReport4(
     startWGBudget: 0,
     endWGBudget: 0,
     refillBudget: 0,
-    workerRewards: 0,
+    regularSalaries: 0,
     leadRewards: 0,
-    actualSpending: 0,
+    discretionarySpending: 0,
+    totalSpending: 0,
   };
   let wgBudgetsOfUsd = {} as {
     [key in GroupShortIDName]: wgBudgetType;
@@ -585,9 +586,10 @@ export async function generateReport4(
     startWGBudget: 0,
     endWGBudget: 0,
     refillBudget: 0,
-    workerRewards: 0,
+    regularSalaries: 0,
     leadRewards: 0,
-    actualSpending: 0,
+    discretionarySpending: 0,
+    totalSpending: 0,
   };
   let wgSpending = {} as {
     [key in GroupShortIDName]: {
@@ -615,7 +617,7 @@ export async function generateReport4(
   );
   const currentWGSalary = await getWorkingGroupSalary(
     api,
-    startBlockHash,
+    endBlockHash,
     startBlockTimestamp,
     endBlockTimestamp,
     startBlockNumber,
@@ -651,15 +653,19 @@ export async function generateReport4(
   );
   Object.keys(GroupIdToGroupParam).map(async (_group) => {
     type wgDataType = keyof typeof wgBudgetOfJoyTotal;
+    const wgRefill = currentWGRefillProposal[_group as GroupIdName] || 0;
     let wgDataOfJoy: wgBudgetType = {
       startWGBudget: currentWGBudget[_group as GroupIdName].startBudget,
       endWGBudget: currentWGBudget[_group as GroupIdName].endBudget,
-      refillBudget: 0,
-      actualSpending:
-        currentWGSalary[_group as GroupIdName].workerSalary +
-        currentWGSalary[_group as GroupIdName].leadSalary,
-      workerRewards: currentWGSalary[_group as GroupIdName].workerSalary,
-      leadRewards: currentWGSalary[_group as GroupIdName].leadSalary,
+      refillBudget: wgRefill,
+      totalSpending:
+        currentWGBudget[_group as GroupIdName].startBudget -
+        currentWGBudget[_group as GroupIdName].endBudget +
+        wgRefill,
+      regularSalaries: currentWGSalary[_group as GroupIdName].regularSalaries,
+      discretionarySpending:
+        currentWGSalary[_group as GroupIdName].discretionarySpending,
+      leadRewards: currentWGSalary[_group as GroupIdName].leadRewards,
     };
     if (currentWGRefillProposal[_group as GroupIdName]) {
       wgDataOfJoy.refillBudget = currentWGRefillProposal[_group as GroupIdName];
@@ -669,18 +675,14 @@ export async function generateReport4(
       wgDataOfJoy.refillBudget -
       wgDataOfJoy.endWGBudget;
     let wgDataOfUsd: wgBudgetType = {
-      startWGBudget: Math.ceil(
-        wgDataOfJoy.startWGBudget * Number(EMA30.curEMA),
-      ),
-      endWGBudget: Math.ceil(wgDataOfJoy.endWGBudget * Number(EMA30.curEMA)),
-      actualSpending: Math.ceil(
-        wgDataOfJoy.actualSpending * Number(EMA30.curEMA),
-      ),
-      refillBudget: Math.ceil(wgDataOfJoy.refillBudget * Number(EMA30.curEMA)),
-      workerRewards: Math.ceil(
-        wgDataOfJoy.workerRewards * Number(EMA30.curEMA),
-      ),
-      leadRewards: Math.ceil(wgDataOfJoy.leadRewards * Number(EMA30.curEMA)),
+      startWGBudget: wgDataOfJoy.startWGBudget * Number(EMA30.curEMA),
+      endWGBudget: wgDataOfJoy.endWGBudget * Number(EMA30.curEMA),
+      totalSpending: wgDataOfJoy.totalSpending * Number(EMA30.curEMA),
+      refillBudget: wgDataOfJoy.refillBudget * Number(EMA30.curEMA),
+      regularSalaries: wgDataOfJoy.regularSalaries * Number(EMA30.curEMA),
+      leadRewards: wgDataOfJoy.leadRewards * Number(EMA30.curEMA),
+      discretionarySpending:
+        wgDataOfJoy.discretionarySpending * Number(EMA30.curEMA),
     };
     let prevSpendingOfJoy =
       prevWGBudget[_group as GroupIdName].startBudget -
@@ -690,9 +692,9 @@ export async function generateReport4(
     let wgSpending_tmp = {
       id: GroupIdToGroupParam[_group as GroupIdName] as GroupShortIDName,
       prevSpendingOfJoy: prevSpendingOfJoy,
-      prevSpendingOfUsd: Math.ceil(prevSpendingOfJoy * Number(EMA30.prevEMA)),
+      prevSpendingOfUsd: prevSpendingOfJoy * Number(EMA30.prevEMA),
       currentSpendingOfJoy: wgSpent,
-      currentSpendingOfUsd: Math.ceil(wgSpent * Number(EMA30.curEMA)),
+      currentSpendingOfUsd: wgSpent * Number(EMA30.curEMA),
     };
     wgSpending[GroupIdToGroupParam[_group as GroupIdName] as GroupShortIDName] =
       wgSpending_tmp;
@@ -743,11 +745,9 @@ export async function generateReport4(
   overallBudget["councilReward"] = {
     id: "councilReward",
     currentSpendingOfJoy: councilRewardBudget,
-    currentSpendingOfUsd: Math.ceil(councilRewardBudget * Number(EMA30.curEMA)),
+    currentSpendingOfUsd: councilRewardBudget * Number(EMA30.curEMA),
     prevSpendingOfJoy: prevCouncilRewardBudget,
-    prevSpendingOfUsd: Math.ceil(
-      prevCouncilRewardBudget * Number(EMA30.prevEMA),
-    ),
+    prevSpendingOfUsd: prevCouncilRewardBudget * Number(EMA30.prevEMA),
   };
   const validatorRewardsBudget = await getValidatorReward(
     api,
@@ -762,13 +762,9 @@ export async function generateReport4(
   overallBudget["validatorReward"] = {
     id: "validatorReward",
     currentSpendingOfJoy: validatorRewardsBudget,
-    currentSpendingOfUsd: Math.ceil(
-      validatorRewardsBudget * Number(EMA30.curEMA),
-    ),
+    currentSpendingOfUsd: validatorRewardsBudget * Number(EMA30.curEMA),
     prevSpendingOfJoy: prevValidatorRewardsBudget,
-    prevSpendingOfUsd: Math.ceil(
-      prevValidatorRewardsBudget * Number(EMA30.prevEMA),
-    ),
+    prevSpendingOfUsd: prevValidatorRewardsBudget * Number(EMA30.prevEMA),
   };
   const fundingProposalBudget = await getFundingProposal(
     startBlockNumber,
@@ -781,13 +777,10 @@ export async function generateReport4(
   overallBudget["fundingProposal"] = {
     id: "fundingProposal",
     currentSpendingOfJoy: fundingProposalBudget,
-    currentSpendingOfUsd: Math.ceil(
-      fundingProposalBudget * Number(EMA30.curEMA),
-    ),
+    currentSpendingOfUsd: fundingProposalBudget * Number(EMA30.curEMA),
+
     prevSpendingOfJoy: prevFundingProposalBudget,
-    prevSpendingOfUsd: Math.ceil(
-      prevFundingProposalBudget * Number(EMA30.prevEMA),
-    ),
+    prevSpendingOfUsd: prevFundingProposalBudget * Number(EMA30.prevEMA),
   };
   const creatorPayoutRewardBudget = await getCreatorPayoutReward(
     startBlockNumber,
@@ -800,13 +793,9 @@ export async function generateReport4(
   overallBudget["creatorPayoutReward"] = {
     id: "creatorPayoutReward",
     currentSpendingOfJoy: creatorPayoutRewardBudget,
-    currentSpendingOfUsd: Math.ceil(
-      creatorPayoutRewardBudget * Number(EMA30.curEMA),
-    ),
+    currentSpendingOfUsd: creatorPayoutRewardBudget * Number(EMA30.curEMA),
     prevSpendingOfJoy: prevCreatorPayoutRewardBudget,
-    prevSpendingOfUsd: Math.ceil(
-      prevCreatorPayoutRewardBudget * Number(EMA30.prevEMA),
-    ),
+    prevSpendingOfUsd: prevCreatorPayoutRewardBudget * Number(EMA30.prevEMA),
   };
 
   const totalWgSpending = Object.keys(wgSpending).reduce(
@@ -820,9 +809,9 @@ export async function generateReport4(
   overallBudget["wgSpending"] = {
     id: "wgSpending",
     currentSpendingOfJoy: totalWgSpending,
-    currentSpendingOfUsd: Math.ceil(totalWgSpending * Number(EMA30.curEMA)),
+    currentSpendingOfUsd: totalWgSpending * Number(EMA30.curEMA),
     prevSpendingOfJoy: prevTotalWgSpending,
-    prevSpendingOfUsd: Math.ceil(prevTotalWgSpending * Number(EMA30.prevEMA)),
+    prevSpendingOfUsd: prevTotalWgSpending * Number(EMA30.prevEMA),
   };
   const grandTotal =
     councilRewardBudget +
@@ -839,16 +828,16 @@ export async function generateReport4(
   overallBudget["grandTotal"] = {
     id: "grandTotal",
     currentSpendingOfJoy: grandTotal,
-    currentSpendingOfUsd: Math.ceil(grandTotal * Number(EMA30.curEMA)),
+    currentSpendingOfUsd: grandTotal * Number(EMA30.curEMA),
     prevSpendingOfJoy: prevGrandTotal,
-    prevSpendingOfUsd: Math.ceil(prevGrandTotal * Number(EMA30.prevEMA)),
+    prevSpendingOfUsd: prevGrandTotal * Number(EMA30.prevEMA),
   };
   const fees = grandTotal - issuanceChange;
   // const prevFees = prevGrandTotal - prevTermissuanceChange;
   overallBudget["fees"] = {
     id: "fees",
     currentSpendingOfJoy: fees,
-    currentSpendingOfUsd: Math.ceil(fees * Number(EMA30.curEMA)),
+    currentSpendingOfUsd: fees * Number(EMA30.curEMA),
     prevSpendingOfJoy: 0,
     prevSpendingOfUsd: 0,
   };
@@ -866,7 +855,7 @@ export async function generateReport4(
     spendingBudget:
       councilRewardBudget +
       creatorPayoutRewardBudget +
-      totalWgSpending +
+      wgBudgetOfJoyTotal.refillBudget +
       fundingProposalBudget,
     refillBudget: refillCouncilBudget,
     endBlock: endCouncilBudget,

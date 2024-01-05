@@ -14862,7 +14862,6 @@ export type MemberMetadata = BaseGraphQlObject & {
   name?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   updatedById?: Maybe<Scalars['ID']['output']>;
-  validatorAccount?: Maybe<Scalars['String']['output']>;
   version: Scalars['Int']['output'];
 };
 
@@ -14878,7 +14877,6 @@ export type MemberMetadataCreateInput = {
   avatar: Scalars['JSONObject']['input'];
   isVerifiedValidator?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  validatorAccount?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MemberMetadataEdge = {
@@ -14899,9 +14897,7 @@ export enum MemberMetadataOrderByInput {
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
-  UpdatedAtDesc = 'updatedAt_DESC',
-  ValidatorAccountAsc = 'validatorAccount_ASC',
-  ValidatorAccountDesc = 'validatorAccount_DESC'
+  UpdatedAtDesc = 'updatedAt_DESC'
 }
 
 export type MemberMetadataUpdateInput = {
@@ -14909,7 +14905,6 @@ export type MemberMetadataUpdateInput = {
   avatar?: InputMaybe<Scalars['JSONObject']['input']>;
   isVerifiedValidator?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  validatorAccount?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MemberMetadataWhereInput = {
@@ -14972,11 +14967,6 @@ export type MemberMetadataWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
   updatedById_eq?: InputMaybe<Scalars['ID']['input']>;
   updatedById_in?: InputMaybe<Array<Scalars['ID']['input']>>;
-  validatorAccount_contains?: InputMaybe<Scalars['String']['input']>;
-  validatorAccount_endsWith?: InputMaybe<Scalars['String']['input']>;
-  validatorAccount_eq?: InputMaybe<Scalars['String']['input']>;
-  validatorAccount_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  validatorAccount_startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MemberMetadataWhereUniqueInput = {
@@ -15706,6 +15696,7 @@ export enum MembershipExternalResourceType {
   Discord = 'DISCORD',
   Email = 'EMAIL',
   Facebook = 'FACEBOOK',
+  Github = 'GITHUB',
   Hyperlink = 'HYPERLINK',
   Irc = 'IRC',
   Linkedin = 'LINKEDIN',
@@ -37741,7 +37732,7 @@ export type WorkingGroupDetailedFieldsFragment = { __typename: 'WorkingGroup', i
 
 export type BudgetSpendingEventFieldsFragment = { __typename: 'BudgetSpendingEvent', id: string, groupId: string, reciever: string, amount: string, rationale?: string | null };
 
-export type RewardPaidEventFieldsFragment = { __typename: 'RewardPaidEvent', id: string, amount: string, rewardAccount: string, createdAt: any };
+export type RewardPaidEventFieldsFragment = { __typename: 'RewardPaidEvent', id: string, amount: string, rewardAccount: string, createdAt: any, worker: { __typename: 'Worker', runtimeId: number } };
 
 export type GetWorkingGroupsQueryVariables = Exact<{
   where?: InputMaybe<WorkingGroupWhereInput>;
@@ -37834,10 +37825,11 @@ export type GetGroupDebtQuery = { __typename: 'Query', workers: Array<{ __typena
 
 export type GetRewardsQueryVariables = Exact<{
   where?: InputMaybe<RewardPaidEventWhereInput>;
+  limit: Scalars['Int']['input'];
 }>;
 
 
-export type GetRewardsQuery = { __typename: 'Query', rewardPaidEvents: Array<{ __typename: 'RewardPaidEvent', id: string, amount: string, rewardAccount: string, createdAt: any }> };
+export type GetRewardsQuery = { __typename: 'Query', rewardPaidEvents: Array<{ __typename: 'RewardPaidEvent', id: string, amount: string, rewardAccount: string, createdAt: any, worker: { __typename: 'Worker', runtimeId: number } }> };
 
 export type WorkingGroupOpeningMetadataFieldsFragment = { __typename: 'WorkingGroupOpeningMetadata', title?: string | null, applicationDetails?: string | null, shortDescription?: string | null, description?: string | null, hiringLimit?: number | null, expectedEnding?: any | null };
 
@@ -38363,6 +38355,9 @@ export const RewardPaidEventFieldsFragmentDoc = gql`
   amount
   rewardAccount
   createdAt
+  worker {
+    runtimeId
+  }
 }
     `;
 export const WorkingGroupOpeningMetadataFieldsFragmentDoc = gql`
@@ -39106,8 +39101,8 @@ export const GetGroupDebtDocument = gql`
 }
     `;
 export const GetRewardsDocument = gql`
-    query GetRewards($where: RewardPaidEventWhereInput) {
-  rewardPaidEvents(where: $where) {
+    query GetRewards($where: RewardPaidEventWhereInput, $limit: Int!) {
+  rewardPaidEvents(where: $where, limit: $limit) {
     ...RewardPaidEventFields
   }
 }
@@ -39506,7 +39501,7 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     GetGroupDebt(variables: GetGroupDebtQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetGroupDebtQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetGroupDebtQuery>(GetGroupDebtDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetGroupDebt', 'query');
     },
-    GetRewards(variables?: GetRewardsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetRewardsQuery> {
+    GetRewards(variables: GetRewardsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetRewardsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetRewardsQuery>(GetRewardsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRewards', 'query');
     },
     CountWorkingGroupOpenings(variables?: CountWorkingGroupOpeningsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CountWorkingGroupOpeningsQuery> {

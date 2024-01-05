@@ -121,6 +121,9 @@ fragment RewardPaidEventFields on RewardPaidEvent {
   amount
   rewardAccount
   createdAt
+  worker {
+    runtimeId
+  }
 }
 
 query GetWorkingGroups(
@@ -142,7 +145,7 @@ query GetWorkingGroups(
 query GetBudgetSpending($where: BudgetSpendingEventWhereInput,$offset:Int,$limit:Int) {
   budgetSpendingEvents(where: $where  offset:$offset limit:$limit orderBy:createdAt_ASC) {
     ...BudgetSpendingEventFields
-  } 
+  }
 }
 
 query GetBudgetSpendingEventsTotalCount($where: BudgetSpendingEventWhereInput) {
@@ -208,8 +211,8 @@ query GetGroupDebt($where: WorkerWhereInput!) {
   }
 }
 
-query GetRewards($where: RewardPaidEventWhereInput) {
-  rewardPaidEvents(where: $where) {
+query GetRewards($where: RewardPaidEventWhereInput, $limit: Int!) {
+  rewardPaidEvents(where: $where, limit: $limit) {
     ...RewardPaidEventFields
   }
 }

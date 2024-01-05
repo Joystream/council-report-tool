@@ -14859,7 +14859,6 @@ export type MemberMetadata = BaseGraphQlObject & {
   name?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   updatedById?: Maybe<Scalars['ID']['output']>;
-  validatorAccount?: Maybe<Scalars['String']['output']>;
   version: Scalars['Int']['output'];
 };
 
@@ -14875,7 +14874,6 @@ export type MemberMetadataCreateInput = {
   avatar: Scalars['JSONObject']['input'];
   isVerifiedValidator?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  validatorAccount?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MemberMetadataEdge = {
@@ -14896,9 +14894,7 @@ export enum MemberMetadataOrderByInput {
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
-  UpdatedAtDesc = 'updatedAt_DESC',
-  ValidatorAccountAsc = 'validatorAccount_ASC',
-  ValidatorAccountDesc = 'validatorAccount_DESC'
+  UpdatedAtDesc = 'updatedAt_DESC'
 }
 
 export type MemberMetadataUpdateInput = {
@@ -14906,7 +14902,6 @@ export type MemberMetadataUpdateInput = {
   avatar?: InputMaybe<Scalars['JSONObject']['input']>;
   isVerifiedValidator?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  validatorAccount?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MemberMetadataWhereInput = {
@@ -14969,11 +14964,6 @@ export type MemberMetadataWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
   updatedById_eq?: InputMaybe<Scalars['ID']['input']>;
   updatedById_in?: InputMaybe<Array<Scalars['ID']['input']>>;
-  validatorAccount_contains?: InputMaybe<Scalars['String']['input']>;
-  validatorAccount_endsWith?: InputMaybe<Scalars['String']['input']>;
-  validatorAccount_eq?: InputMaybe<Scalars['String']['input']>;
-  validatorAccount_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  validatorAccount_startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type MemberMetadataWhereUniqueInput = {
@@ -15703,6 +15693,7 @@ export enum MembershipExternalResourceType {
   Discord = 'DISCORD',
   Email = 'EMAIL',
   Facebook = 'FACEBOOK',
+  Github = 'GITHUB',
   Hyperlink = 'HYPERLINK',
   Irc = 'IRC',
   Linkedin = 'LINKEDIN',

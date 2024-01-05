@@ -308,6 +308,13 @@ export default function Council() {
     }
   };
 
+  const formatNumber = new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 2,
+  }).format;
+  const formatPct = new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 3,
+  }).format;
+
   const writeCouncilReport = (councilReportData: Object, alias: string) => {
     type reportKeys = keyof typeof councilReportData;
     Object.keys(councilReportData).map((_type) => {
@@ -319,8 +326,7 @@ export default function Council() {
       ) {
         const pattern = alias + "_" + _type;
         let value: any = councilReportData[_type as reportKeys];
-        if (typeof value == "number")
-          value = Number(value).toLocaleString("en-US");
+        if (typeof value == "number") value = formatNumber(value);
         else value = String(value);
         councilReport = councilReport.replaceAll(pattern, value);
       } else if (_type == "projectInflations") {
@@ -343,18 +349,18 @@ export default function Council() {
             "| " +
             tmp_inflation.term +
             " | " +
-            tmp_inflation.mintedToken +
+            formatNumber(tmp_inflation.mintedToken) +
             " | " +
-            tmp_inflation.inflation +
+            formatPct(tmp_inflation.inflation) +
             " % |" +
             String.fromCharCode(10);
         });
         _project_inflation +=
           "| Total" +
           " | " +
-          totalMinted +
+          formatNumber(totalMinted) +
           " | " +
-          decimalAdjust(totalInflation) +
+          formatPct(totalInflation) +
           " % |" +
           String.fromCharCode(10);
         const pattern = "_project_inflation";

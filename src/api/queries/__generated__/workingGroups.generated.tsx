@@ -18,7 +18,7 @@ export type WorkingGroupDetailedFieldsFragment = { __typename: 'WorkingGroup', i
 
 export type BudgetSpendingEventFieldsFragment = { __typename: 'BudgetSpendingEvent', id: string, groupId: string, reciever: string, amount: string, rationale?: string | null };
 
-export type RewardPaidEventFieldsFragment = { __typename: 'RewardPaidEvent', id: string, amount: string, rewardAccount: string, createdAt: any };
+export type RewardPaidEventFieldsFragment = { __typename: 'RewardPaidEvent', id: string, amount: string, rewardAccount: string, createdAt: any, worker: { __typename: 'Worker', runtimeId: number } };
 
 export type GetWorkingGroupsQueryVariables = Types.Exact<{
   where?: Types.InputMaybe<Types.WorkingGroupWhereInput>;
@@ -111,10 +111,11 @@ export type GetGroupDebtQuery = { __typename: 'Query', workers: Array<{ __typena
 
 export type GetRewardsQueryVariables = Types.Exact<{
   where?: Types.InputMaybe<Types.RewardPaidEventWhereInput>;
+  limit: Types.Scalars['Int']['input'];
 }>;
 
 
-export type GetRewardsQuery = { __typename: 'Query', rewardPaidEvents: Array<{ __typename: 'RewardPaidEvent', id: string, amount: string, rewardAccount: string, createdAt: any }> };
+export type GetRewardsQuery = { __typename: 'Query', rewardPaidEvents: Array<{ __typename: 'RewardPaidEvent', id: string, amount: string, rewardAccount: string, createdAt: any, worker: { __typename: 'Worker', runtimeId: number } }> };
 
 export type WorkingGroupOpeningMetadataFieldsFragment = { __typename: 'WorkingGroupOpeningMetadata', title?: string | null, applicationDetails?: string | null, shortDescription?: string | null, description?: string | null, hiringLimit?: number | null, expectedEnding?: any | null };
 
@@ -452,6 +453,9 @@ export const RewardPaidEventFieldsFragmentDoc = gql`
   amount
   rewardAccount
   createdAt
+  worker {
+    runtimeId
+  }
 }
     `;
 export const WorkingGroupOpeningMetadataFieldsFragmentDoc = gql`
@@ -1050,8 +1054,8 @@ export type GetGroupDebtQueryHookResult = ReturnType<typeof useGetGroupDebtQuery
 export type GetGroupDebtLazyQueryHookResult = ReturnType<typeof useGetGroupDebtLazyQuery>;
 export type GetGroupDebtQueryResult = Apollo.QueryResult<GetGroupDebtQuery, GetGroupDebtQueryVariables>;
 export const GetRewardsDocument = gql`
-    query GetRewards($where: RewardPaidEventWhereInput) {
-  rewardPaidEvents(where: $where) {
+    query GetRewards($where: RewardPaidEventWhereInput, $limit: Int!) {
+  rewardPaidEvents(where: $where, limit: $limit) {
     ...RewardPaidEventFields
   }
 }
@@ -1070,10 +1074,11 @@ export const GetRewardsDocument = gql`
  * const { data, loading, error } = useGetRewardsQuery({
  *   variables: {
  *      where: // value for 'where'
+ *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useGetRewardsQuery(baseOptions?: Apollo.QueryHookOptions<GetRewardsQuery, GetRewardsQueryVariables>) {
+export function useGetRewardsQuery(baseOptions: Apollo.QueryHookOptions<GetRewardsQuery, GetRewardsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetRewardsQuery, GetRewardsQueryVariables>(GetRewardsDocument, options);
       }
