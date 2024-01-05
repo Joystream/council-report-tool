@@ -62,7 +62,7 @@ export const WorkerStatusToTypename: Record<
 };
 
 export const asWorkerBaseInfo = (
-  fields: WorkerFieldsFragment
+  fields: WorkerFieldsFragment,
 ): WorkerBaseInfo => ({
   member: asMember(fields.membership),
   applicationId: fields.applicationId,
@@ -89,7 +89,7 @@ export const asWorker = (fields: WorkerFieldsFragment): Worker => ({
 });
 
 export const asWorkerWithDetails = (
-  fields: WorkerDetailedFieldsFragment
+  fields: WorkerDetailedFieldsFragment,
 ): WorkerWithDetails => ({
   ...asWorker(fields),
   applicationId: fields.application.id,
@@ -109,6 +109,6 @@ export const asPastWorker = (fields: PastWorkerFieldsFragment): PastWorker => ({
     castQueryResult(fields.status, "WorkerStatusTerminated")
       ?.terminatedWorkerEvent ??
       castQueryResult(fields.status, "WorkerStatusLeft")?.workerExitedEvent ??
-      fields.entry
+      fields.entry,
   ),
 });

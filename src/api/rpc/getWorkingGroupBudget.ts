@@ -6,7 +6,7 @@ import { HexString } from "@polkadot/util/types";
 export async function getWorkingGroupBudget(
   api: ApiPromise,
   startBlock: HexString,
-  endBlock: HexString
+  endBlock: HexString,
 ) {
   const budgets = {} as {
     [key in GroupIdName]: {
@@ -17,11 +17,11 @@ export async function getWorkingGroupBudget(
 
   const promises = Object.keys(GroupIdToGroupParam).map(async (group) => {
     const startBudget = toJoy(
-      await (await api.at(startBlock)).query[group as GroupIdName].budget()
+      await (await api.at(startBlock)).query[group as GroupIdName].budget(),
     );
     const endBudget = toJoy(
-      await (await api.at(endBlock)).query[group as GroupIdName].budget()
-    )
+      await (await api.at(endBlock)).query[group as GroupIdName].budget(),
+    );
     budgets[group as GroupIdName] = { startBudget, endBudget };
   });
   await Promise.all(promises);

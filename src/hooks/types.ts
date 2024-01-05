@@ -1,10 +1,9 @@
-import { ElectedCouncil } from '@/types';
-import { GroupShortIDName, OverallBudgetKeys } from '@/types';
+import { ElectedCouncil } from "@/types";
+import { GroupShortIDName, OverallBudgetKeys } from "@/types";
 
 export interface ForSelectedCouncil {
   council?: ElectedCouncil;
 }
-
 
 export type DailyData = {
   date: Date;
@@ -12,32 +11,32 @@ export type DailyData = {
 };
 
 export type ChannelData = {
-  id: string,
-  createdAt: Date
-}
+  id: string;
+  createdAt: Date;
+};
 
 export type VideoData = {
-  id: string,
-  createdAt: string
-}
+  id: string;
+  createdAt: string;
+};
 
 export type BudgetData = {
-  groupId: string,
-  amount: number
-}
+  groupId: string;
+  amount: number;
+};
 
 export type CouncilBudgetData = {
-  memberId: string,
-  amount: number
-}
+  memberId: string;
+  amount: number;
+};
 
 export type WGspedingType = {
-  [key in GroupShortIDName]: spendigBudgetBarType
-}
+  [key in GroupShortIDName]: spendigBudgetBarType;
+};
 
 export type OverallType = {
-  [key in OverallBudgetKeys]: spendigBudgetBarType
-}
+  [key in OverallBudgetKeys]: spendigBudgetBarType;
+};
 
 export type spendigBudgetBarType = {
   id: string;
@@ -45,12 +44,12 @@ export type spendigBudgetBarType = {
   prevSpendingOfUsd: number;
   currentSpendingOfJoy: number;
   currentSpendingOfUsd: number;
-}
+};
 
 export type spendingBudgetPieType = {
   name: string;
   value: number;
-}
+};
 
 export type wgBudgetType = {
   startWGBudget: number;
@@ -59,4 +58,4 @@ export type wgBudgetType = {
   workerRewards: number;
   leadRewards: number;
   actualSpending: number;
-}
+};

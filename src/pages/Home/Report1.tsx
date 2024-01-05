@@ -10,7 +10,7 @@ export default function Report1() {
 
   const [loading, setLoading] = useState(false);
   const [currentBlock, setCurrentBlock] = useState<number | undefined>(
-    undefined
+    undefined,
   );
   const [totalBurn, setTotalBurn] = useState<number | undefined>(undefined);
   const [block, setBlock] = useState(0);
@@ -34,11 +34,11 @@ export default function Report1() {
     const [report1] = await Promise.all([generateReport1(api, block, storage)]);
     setReport1(report1);
     setLoading(false);
-  }
+  };
 
   const storageHandler = () => {
     setStorage(!storage);
-  }
+  };
 
   return (
     <div className="prose max-w-3xl m-auto mt-4 rounded-sm p-2 border-2 border-[#fff]">
@@ -48,16 +48,22 @@ export default function Report1() {
           Current block number: {currentBlock ? currentBlock : "Loading..."}
         </div>
         <div>
-          Total burn : {totalBurn ? totalBurn.toLocaleString('en-US') + " JOY" : "Loading"}
+          Total burn :{" "}
+          {totalBurn ? totalBurn.toLocaleString("en-US") + " JOY" : "Loading"}
         </div>
-        <div >
-          <label  >Block:</label>
+        <div>
+          <label>Block:</label>
           <input
             type="number"
             value={block}
             onChange={(e) => setBlock(parseInt(e.target.value, 10))}
           />
-          <input type="checkbox" className="pr-3" checked={storage} onChange={storageHandler} />
+          <input
+            type="checkbox"
+            className="pr-3"
+            checked={storage}
+            onChange={storageHandler}
+          />
           <label>Storage Status</label>
 
           <button
@@ -68,7 +74,6 @@ export default function Report1() {
             {loading ? "Generating..." : "Generate report"}
           </button>
         </div>
-
       </div>
 
       <ReactJson src={report1} theme="monokai" collapsed />

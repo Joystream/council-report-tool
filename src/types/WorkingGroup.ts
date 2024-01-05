@@ -26,14 +26,14 @@ export const OverallBudget = {
   creatorPayoutReward: "creatorPayoutReward",
   validatorReward: "validatorReward",
   fees: "fees",
-  grandTotal: "grandTotal"
-}
+  grandTotal: "grandTotal",
+};
 
 export type OverallBudgetKeys = keyof typeof OverallBudget;
 
 export type GroupIdName = keyof typeof GroupIdToGroupParam;
 
-export type GroupShortIDName = typeof GroupIdToGroupParam[GroupIdName];
+export type GroupShortIDName = (typeof GroupIdToGroupParam)[GroupIdName];
 
 export interface WorkingGroup {
   id: GroupIdName;
@@ -51,7 +51,7 @@ export interface WorkingGroup {
 }
 
 export const asWorkingGroup = (
-  group: WorkingGroupDetailedFieldsFragment
+  group: WorkingGroupDetailedFieldsFragment,
 ): WorkingGroup => {
   return {
     id: group.id as GroupIdName,
@@ -76,5 +76,5 @@ export const asWorkingGroupName = (name: string) =>
     .replace(/^[a-z]/, (match) => match.toUpperCase());
 
 export const getAverageStake = (
-  workers: Pick<WorkerFieldsFragment, "stake">[]
+  workers: Pick<WorkerFieldsFragment, "stake">[],
 ) => sumStakes(workers).divn(workers.length);

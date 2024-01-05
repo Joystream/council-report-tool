@@ -12,7 +12,7 @@ export interface ElectedCouncil {
 }
 
 export const asElectedCouncil = (
-  fields: ElectedCouncilFieldsFragment
+  fields: ElectedCouncilFieldsFragment,
 ): ElectedCouncil => ({
   id: fields.id,
   councilors: fields.councilMembers.map(asCouncilor),

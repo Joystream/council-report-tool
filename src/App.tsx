@@ -11,8 +11,7 @@ const App = () => {
         <Route path="/total-burn" element={<TokenBurn />}></Route>
       </Routes>
     </BrowserRouter>
-
   );
-}
+};
 
 export default App;

@@ -30,7 +30,7 @@ export const asBlock = (fields: BlockFields): Block => ({
 export const maybeAsBlock = (
   number?: number | null,
   dateTime?: string,
-  network?: Types.Network | null
+  network?: Types.Network | null,
 ): Block | undefined => {
   if (isNumber(number) && dateTime && network)
     return asBlock({ inBlock: number, createdAt: dateTime, network });

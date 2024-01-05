@@ -349,7 +349,7 @@ EMA30 (prev term)= _EMA30_prevEMA
 **Chart 7.8. WGs’ spending (current term VS prev term), USDT**
 
 ![_graph_wgBudget-usdt](_graph_wgBudget-usdt)
-`
+`;
 
 export const councilReportWithOutMediaStatus = `
 # Council Report

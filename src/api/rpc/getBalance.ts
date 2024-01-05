@@ -5,13 +5,12 @@ import BN from "bn.js";
 export async function getBalance(
   api: ApiPromise,
   address: string,
-  blockHash?: HexString
+  blockHash?: HexString,
 ): Promise<BN> {
   let _api = api;
   if (blockHash) {
     // @ts-ignore
     _api = await api.at(blockHash);
-    
   }
   const {
     data: { free: balance },

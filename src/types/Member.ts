@@ -69,7 +69,7 @@ export interface MemberWithDetails extends Member {
 }
 
 export const asMember = (
-  data: Omit<MemberFieldsFragment, "__typename">
+  data: Omit<MemberFieldsFragment, "__typename">,
 ): Member => ({
   id: data.id,
   handle: data.handle,
@@ -90,7 +90,9 @@ export const asMember = (
 });
 
 const asBoundAccountsEvent = (
-  fields: NonNullable<MemberFieldsFragment["stakingaccountaddedeventmember"]>[0]
+  fields: NonNullable<
+    MemberFieldsFragment["stakingaccountaddedeventmember"]
+  >[0],
 ): BoundAccountEvent => ({
   createdAtBlock: asBlock({
     createdAt: fields.createdAt,
@@ -101,7 +103,7 @@ const asBoundAccountsEvent = (
 });
 
 export const asMemberRole = (
-  data: MemberFieldsFragment["roles"][0]
+  data: MemberFieldsFragment["roles"][0],
 ): MemberRole => ({
   id: data.id,
   isLead: data.isLead,

@@ -19,7 +19,7 @@ export const isRecord = (something: unknown): something is Obj =>
 
 export const whenDefined = <T, R>(
   something: T | undefined,
-  fn: (something: T) => R
+  fn: (something: T) => R,
 ): R | undefined => {
   if (isDefined(something)) return fn(something);
   return undefined;
@@ -44,7 +44,7 @@ interface EqualsOption {
 
 export const objectEquals = <T extends Obj>(
   reference: T,
-  { checkExtraKeys = false, depth = 1 }: EqualsOption = {}
+  { checkExtraKeys = false, depth = 1 }: EqualsOption = {},
 ): ((compared: T) => boolean) => {
   const equalsOption = {
     checkExtraKeys,
@@ -54,13 +54,13 @@ export const objectEquals = <T extends Obj>(
   return (compared) =>
     (!checkExtraKeys || expectedKeys.length === Object.keys(compared).length) &&
     expectedKeys.every((key) =>
-      equals(compared[key], equalsOption)(reference[key])
+      equals(compared[key], equalsOption)(reference[key]),
     );
 };
 
 export const equals = <T>(
   reference: T,
-  { depth = 1, ...option }: EqualsOption = {}
+  { depth = 1, ...option }: EqualsOption = {},
 ): ((compared: T) => boolean) => {
   if (depth > 0 && isRecord(reference)) {
     const isEqual = objectEquals(reference, { depth, ...option });
@@ -72,7 +72,7 @@ export const equals = <T>(
 
 export const merge = <A extends Obj, B extends Obj = Partial<A>>(
   a: A,
-  b: B
+  b: B,
 ): A & B => ({ ...a, ...b });
 
 export const propsEquals =
@@ -83,27 +83,27 @@ export const propsEquals =
 export const definedValues = <T extends Record<any, any>>(obj: T): T =>
   Object.fromEntries(
     Object.entries(obj).flatMap(([key, value]) =>
-      isDefined(value) ? [[key, value]] : []
-    )
+      isDefined(value) ? [[key, value]] : [],
+    ),
   ) as T;
 
 // Lists:
 
 export const dedupeObjects = <T extends Obj>(
   list: T[],
-  options?: EqualsOption
+  options?: EqualsOption,
 ): T[] =>
   list.reduce(
     (remain: T[], item) => [
       ...remain,
       ...(remain.some(objectEquals(item, options)) ? [] : [item]),
     ],
-    []
+    [],
   );
 
 export const intersperse = <T, S>(
   list: T[],
-  toSeparator: (index: number, list: T[]) => S
+  toSeparator: (index: number, list: T[]) => S,
 ): (T | S)[] =>
   list.length < 2
     ? list
@@ -116,12 +116,12 @@ export const intersperse = <T, S>(
 
 export const partition = <T>(
   list: T[],
-  predicate: (x: T) => boolean
+  predicate: (x: T) => boolean,
 ): [T[], T[]] =>
   list.reduce(
     ([pass, fail]: [T[], T[]], item): [T[], T[]] =>
       predicate(item) ? [[...pass, item], fail] : [pass, [...fail, item]],
-    [[], []]
+    [[], []],
   );
 
 export const repeat = <T>(getItem: (index: number) => T, times: number): T[] =>
@@ -129,7 +129,7 @@ export const repeat = <T>(getItem: (index: number) => T, times: number): T[] =>
 
 export const debounce = <T extends (...params: any[]) => any>(
   fn: T,
-  delay = 400
+  delay = 400,
 ) => {
   type Result =
     | (ReturnType<T> extends Promise<infer U> ? U : ReturnType<T>)
@@ -169,7 +169,7 @@ export const arrayGroupBy = (items: Item[], key: keyof Item) =>
       ...result,
       [item[key]]: [...(result[item[key]] || []), item],
     }),
-    {}
+    {},
   );
 
 // Promises:
@@ -177,14 +177,14 @@ export const arrayGroupBy = (items: Item[], key: keyof Item) =>
 type MapperP<T, R> = (
   value: T,
   index: number,
-  array: T[] | readonly T[]
+  array: T[] | readonly T[],
 ) => Promise<R>;
 export const mapP = <T, R>(
   list: T[] | readonly T[],
-  mapper: MapperP<T, R>
+  mapper: MapperP<T, R>,
 ): Promise<R[]> => Promise.all(list.map(mapper));
 
 export const flatMapP = async <T, R>(
   list: T[] | readonly T[],
-  mapper: MapperP<T, R | R[]>
+  mapper: MapperP<T, R | R[]>,
 ): Promise<R[]> => Promise.all(flatten(await mapP(list, mapper)));

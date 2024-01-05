@@ -4,7 +4,7 @@ import BN from "bn.js";
 
 export async function getTotalSupply(
   api: ApiPromise,
-  blockHash?: HexString
+  blockHash?: HexString,
 ): Promise<BN> {
   const _api = blockHash ? await api.at(blockHash) : api;
 

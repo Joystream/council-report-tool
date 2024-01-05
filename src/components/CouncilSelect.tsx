@@ -46,7 +46,7 @@ export default function CouncilSelect({
   const { data } = useElectedCouncils({});
   useEffect(() => {
     console.log("ele", data);
-  }, [data])
+  }, [data]);
   return (
     <div className="justify-content-center">
       <div>Choose council </div>

@@ -9,8 +9,9 @@ export interface BlockTimeProps {
 export default function BlockTime({ block }: BlockTimeProps) {
   return (
     <a
-      href={`https://polkadot.js.org/apps/?rpc=${"wss://rpc.joystream.org:9944"}/ws-rpc#/explorer/query/${block.number
-        }`}
+      href={`https://polkadot.js.org/apps/?rpc=${"wss://rpc.joystream.org:9944"}/ws-rpc#/explorer/query/${
+        block.number
+      }`}
     >
       {block.timestamp.toLocaleString()}
     </a>

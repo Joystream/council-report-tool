@@ -1,6 +1,6 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-import { ElectedCouncil } from '@/types';
+import { ElectedCouncil } from "@/types";
 
 export interface SelectedCouncilState {
   council?: ElectedCouncil;

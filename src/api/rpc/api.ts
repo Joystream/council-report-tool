@@ -7,7 +7,7 @@ import { firstValueFrom } from "rxjs";
 type Api<T extends ApiTypes> = T extends "promise" ? ApiPromise : ApiRx;
 export const getApi = async <T extends ApiTypes>(
   apiType: T,
-  endpoint = "ws://127.0.0.1:9944"
+  endpoint = "ws://127.0.0.1:9944",
 ): Promise<Api<T>> => {
   const provider = new WsProvider(endpoint);
 

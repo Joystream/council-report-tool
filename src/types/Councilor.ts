@@ -14,7 +14,7 @@ export interface Councilor {
 }
 
 export const asCouncilor = (
-  fields: CouncilMemberFieldsFragment
+  fields: CouncilMemberFieldsFragment,
 ): Councilor => ({
   id: fields.id,
   member: asMember(fields.member),
