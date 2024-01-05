@@ -309,9 +309,6 @@ export default function Council() {
   };
 
   const formatNumber = new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 2,
-  }).format;
-  const formatPct = new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 3,
   }).format;
 
@@ -351,7 +348,7 @@ export default function Council() {
             " | " +
             formatNumber(tmp_inflation.mintedToken) +
             " | " +
-            formatPct(tmp_inflation.inflation) +
+            formatNumber(tmp_inflation.inflation) +
             " % |" +
             String.fromCharCode(10);
         });
@@ -360,7 +357,7 @@ export default function Council() {
           " | " +
           formatNumber(totalMinted) +
           " | " +
-          formatPct(totalInflation) +
+          formatNumber(totalInflation) +
           " % |" +
           String.fromCharCode(10);
         const pattern = "_project_inflation";
