@@ -319,15 +319,14 @@ export const getVideoChartData = async (
   start: number,
   end: number,
   totalCount: number,
-) => {
-  const { GetNonEmptyChannel } = getSdk(client);
-  const defaultLimit = 1000;
-  let curDate = "";
-  let count = 0;
-  const videoChart: Array<DailyData> = [];
+): Promise<DailyData[]> => {
+  const chart: Map<string, number> = new Map();
+
+  const { GetVideoCreationDate } = getSdk(client);
+  const defaultLimit = 40_000;
   const loop = Math.ceil(totalCount / defaultLimit);
   for (let i = 0; i < loop; i++) {
-    const { videos } = await GetNonEmptyChannel({
+    const { videos } = await GetVideoCreationDate({
       where: {
         createdInBlock_gt: start,
         createdInBlock_lte: end,
@@ -335,26 +334,15 @@ export const getVideoChartData = async (
       limit: defaultLimit,
       offset: defaultLimit * i,
     });
-    if (curDate == "") {
-      curDate = moment(videos[0].createdAt).format("YYYY-MM-DD");
-    }
-    videos.map((video) => {
-      if (moment(video.createdAt).format("YYYY-MM-DD") == curDate) count++;
-      else {
-        videoChart.push({
-          date: new Date(curDate),
-          count,
-        });
-        count = 1;
-        curDate = moment(video.createdAt).format("YYYY-MM-DD");
-      }
-    });
+    videos
+      .map(({ createdAt }) => createdAt.split("T")[0])
+      .forEach((date) => chart.set(date, (chart.get(date) || 0) + 1));
   }
-  videoChart.push({
-    date: new Date(curDate),
+
+  return Array.from(chart.entries()).map(([date, count]) => ({
+    date: new Date(date),
     count,
-  });
-  return videoChart;
+  }));
 };
 
 // Forum

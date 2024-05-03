@@ -33,6 +33,15 @@ export type GetNonEmptyChannelQueryVariables = Types.Exact<{
 
 export type GetNonEmptyChannelQuery = { __typename: 'Query', videos: Array<{ __typename: 'Video', id: string, channelId: string, createdInBlock: number, createdAt: any, channel: { __typename: 'Channel', id: string, createdAt: any } }> };
 
+export type GetVideoCreationDateQueryVariables = Types.Exact<{
+  limit?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  offset?: Types.InputMaybe<Types.Scalars['Int']['input']>;
+  where?: Types.InputMaybe<Types.VideoWhereInput>;
+}>;
+
+
+export type GetVideoCreationDateQuery = { __typename: 'Query', videos: Array<{ __typename: 'Video', createdAt: any }> };
+
 export const BasicVideoFieldsFragmentDoc = gql`
     fragment BasicVideoFields on Video {
   id
@@ -174,3 +183,40 @@ export function useGetNonEmptyChannelLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetNonEmptyChannelQueryHookResult = ReturnType<typeof useGetNonEmptyChannelQuery>;
 export type GetNonEmptyChannelLazyQueryHookResult = ReturnType<typeof useGetNonEmptyChannelLazyQuery>;
 export type GetNonEmptyChannelQueryResult = Apollo.QueryResult<GetNonEmptyChannelQuery, GetNonEmptyChannelQueryVariables>;
+export const GetVideoCreationDateDocument = gql`
+    query GetVideoCreationDate($limit: Int, $offset: Int, $where: VideoWhereInput) {
+  videos(limit: $limit, offset: $offset, orderBy: createdAt_ASC, where: $where) {
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetVideoCreationDateQuery__
+ *
+ * To run a query within a React component, call `useGetVideoCreationDateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVideoCreationDateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVideoCreationDateQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetVideoCreationDateQuery(baseOptions?: Apollo.QueryHookOptions<GetVideoCreationDateQuery, GetVideoCreationDateQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetVideoCreationDateQuery, GetVideoCreationDateQueryVariables>(GetVideoCreationDateDocument, options);
+      }
+export function useGetVideoCreationDateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetVideoCreationDateQuery, GetVideoCreationDateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetVideoCreationDateQuery, GetVideoCreationDateQueryVariables>(GetVideoCreationDateDocument, options);
+        }
+export type GetVideoCreationDateQueryHookResult = ReturnType<typeof useGetVideoCreationDateQuery>;
+export type GetVideoCreationDateLazyQueryHookResult = ReturnType<typeof useGetVideoCreationDateLazyQuery>;
+export type GetVideoCreationDateQueryResult = Apollo.QueryResult<GetVideoCreationDateQuery, GetVideoCreationDateQueryVariables>;

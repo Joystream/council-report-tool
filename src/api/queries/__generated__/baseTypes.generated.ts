@@ -9742,6 +9742,137 @@ export enum Continent {
   Sa = 'SA'
 }
 
+export type CouncilBudgetDecreasedEvent = BaseGraphQlObject & Event & {
+  __typename: 'CouncilBudgetDecreasedEvent';
+  /** Funding amount. */
+  amount: Scalars['BigInt']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdById: Scalars['ID']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedById?: Maybe<Scalars['ID']['output']>;
+  id: Scalars['ID']['output'];
+  /** Blocknumber of the block in which the event was emitted. */
+  inBlock: Scalars['Int']['output'];
+  /** Hash of the extrinsic which caused the event to be emitted */
+  inExtrinsic?: Maybe<Scalars['String']['output']>;
+  /** Index of event in block from which it was emitted. */
+  indexInBlock: Scalars['Int']['output'];
+  /** Network the block was produced in */
+  network: Network;
+  /** Filtering options for interface implementers */
+  type?: Maybe<EventTypeOptions>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  updatedById?: Maybe<Scalars['ID']['output']>;
+  version: Scalars['Int']['output'];
+};
+
+export type CouncilBudgetDecreasedEventConnection = {
+  __typename: 'CouncilBudgetDecreasedEventConnection';
+  edges: Array<CouncilBudgetDecreasedEventEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type CouncilBudgetDecreasedEventCreateInput = {
+  amount: Scalars['String']['input'];
+  inBlock: Scalars['Float']['input'];
+  inExtrinsic?: InputMaybe<Scalars['String']['input']>;
+  indexInBlock: Scalars['Float']['input'];
+  network: Network;
+};
+
+export type CouncilBudgetDecreasedEventEdge = {
+  __typename: 'CouncilBudgetDecreasedEventEdge';
+  cursor: Scalars['String']['output'];
+  node: CouncilBudgetDecreasedEvent;
+};
+
+export enum CouncilBudgetDecreasedEventOrderByInput {
+  AmountAsc = 'amount_ASC',
+  AmountDesc = 'amount_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC'
+}
+
+export type CouncilBudgetDecreasedEventUpdateInput = {
+  amount?: InputMaybe<Scalars['String']['input']>;
+  inBlock?: InputMaybe<Scalars['Float']['input']>;
+  inExtrinsic?: InputMaybe<Scalars['String']['input']>;
+  indexInBlock?: InputMaybe<Scalars['Float']['input']>;
+  network?: InputMaybe<Network>;
+};
+
+export type CouncilBudgetDecreasedEventWhereInput = {
+  AND?: InputMaybe<Array<CouncilBudgetDecreasedEventWhereInput>>;
+  NOT?: InputMaybe<Array<CouncilBudgetDecreasedEventWhereInput>>;
+  OR?: InputMaybe<Array<CouncilBudgetDecreasedEventWhereInput>>;
+  amount_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  amount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt_eq?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  createdById_eq?: InputMaybe<Scalars['ID']['input']>;
+  createdById_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  deletedAt_all?: InputMaybe<Scalars['Boolean']['input']>;
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']['input']>;
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  deletedById_eq?: InputMaybe<Scalars['ID']['input']>;
+  deletedById_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_eq?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  inBlock_eq?: InputMaybe<Scalars['Int']['input']>;
+  inBlock_gt?: InputMaybe<Scalars['Int']['input']>;
+  inBlock_gte?: InputMaybe<Scalars['Int']['input']>;
+  inBlock_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  inBlock_lt?: InputMaybe<Scalars['Int']['input']>;
+  inBlock_lte?: InputMaybe<Scalars['Int']['input']>;
+  inExtrinsic_contains?: InputMaybe<Scalars['String']['input']>;
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']['input']>;
+  inExtrinsic_eq?: InputMaybe<Scalars['String']['input']>;
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']['input']>;
+  indexInBlock_eq?: InputMaybe<Scalars['Int']['input']>;
+  indexInBlock_gt?: InputMaybe<Scalars['Int']['input']>;
+  indexInBlock_gte?: InputMaybe<Scalars['Int']['input']>;
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  indexInBlock_lt?: InputMaybe<Scalars['Int']['input']>;
+  indexInBlock_lte?: InputMaybe<Scalars['Int']['input']>;
+  network_eq?: InputMaybe<Network>;
+  network_in?: InputMaybe<Array<Network>>;
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedById_eq?: InputMaybe<Scalars['ID']['input']>;
+  updatedById_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+};
+
+export type CouncilBudgetDecreasedEventWhereUniqueInput = {
+  id: Scalars['ID']['input'];
+};
+
 export type CouncilBudgetFundedEvent = BaseGraphQlObject & Event & {
   __typename: 'CouncilBudgetFundedEvent';
   /** Funding amount. */
@@ -10724,6 +10855,12 @@ export type DataObjectTypeVideoThumbnail = {
   __typename: 'DataObjectTypeVideoThumbnail';
   /** Related video entity */
   video?: Maybe<Video>;
+};
+
+export type DecreaseCouncilBudgetProposalDetails = {
+  __typename: 'DecreaseCouncilBudgetProposalDetails';
+  /** Proposed amount of token to burn */
+  amount: Scalars['BigInt']['output'];
 };
 
 export type DecreaseWorkingGroupLeadStakeProposalDetails = {
@@ -12074,6 +12211,7 @@ export enum EventTypeOptions {
   CommentPinnedEvent = 'CommentPinnedEvent',
   CommentReactedEvent = 'CommentReactedEvent',
   CommentTextUpdatedEvent = 'CommentTextUpdatedEvent',
+  CouncilBudgetDecreasedEvent = 'CouncilBudgetDecreasedEvent',
   CouncilBudgetFundedEvent = 'CouncilBudgetFundedEvent',
   CouncilorRewardUpdatedEvent = 'CouncilorRewardUpdatedEvent',
   EnglishAuctionSettledEvent = 'EnglishAuctionSettledEvent',
@@ -12148,6 +12286,7 @@ export enum EventTypeOptions {
   ThreadMetadataUpdatedEvent = 'ThreadMetadataUpdatedEvent',
   ThreadModeratedEvent = 'ThreadModeratedEvent',
   ThreadMovedEvent = 'ThreadMovedEvent',
+  VestedBudgetSpendingEvent = 'VestedBudgetSpendingEvent',
   VideoReactedEvent = 'VideoReactedEvent',
   VideoReactionsPreferenceEvent = 'VideoReactionsPreferenceEvent',
   VoteCastEvent = 'VoteCastEvent',
@@ -20622,7 +20761,7 @@ export type ProposalDecisionMadeEventWhereUniqueInput = {
 
 export type ProposalDecisionStatus = ProposalStatusCanceledByRuntime | ProposalStatusCancelled | ProposalStatusDormant | ProposalStatusExpired | ProposalStatusGracing | ProposalStatusRejected | ProposalStatusSlashed | ProposalStatusVetoed;
 
-export type ProposalDetails = AmendConstitutionProposalDetails | CancelWorkingGroupLeadOpeningProposalDetails | CreateWorkingGroupLeadOpeningProposalDetails | DecreaseWorkingGroupLeadStakeProposalDetails | FillWorkingGroupLeadOpeningProposalDetails | FundingRequestProposalDetails | RuntimeUpgradeProposalDetails | SetCouncilBudgetIncrementProposalDetails | SetCouncilorRewardProposalDetails | SetInitialInvitationBalanceProposalDetails | SetInitialInvitationCountProposalDetails | SetMaxValidatorCountProposalDetails | SetMembershipLeadInvitationQuotaProposalDetails | SetMembershipPriceProposalDetails | SetReferralCutProposalDetails | SetWorkingGroupLeadRewardProposalDetails | SignalProposalDetails | SlashWorkingGroupLeadProposalDetails | TerminateWorkingGroupLeadProposalDetails | UpdateChannelPayoutsProposalDetails | UpdateGlobalNftLimitProposalDetails | UpdateWorkingGroupBudgetProposalDetails | VetoProposalDetails;
+export type ProposalDetails = AmendConstitutionProposalDetails | CancelWorkingGroupLeadOpeningProposalDetails | CreateWorkingGroupLeadOpeningProposalDetails | DecreaseCouncilBudgetProposalDetails | DecreaseWorkingGroupLeadStakeProposalDetails | FillWorkingGroupLeadOpeningProposalDetails | FundingRequestProposalDetails | RuntimeUpgradeProposalDetails | SetCouncilBudgetIncrementProposalDetails | SetCouncilorRewardProposalDetails | SetEraPayoutDampingFactorProposalDetails | SetInitialInvitationBalanceProposalDetails | SetInitialInvitationCountProposalDetails | SetMaxValidatorCountProposalDetails | SetMembershipLeadInvitationQuotaProposalDetails | SetMembershipPriceProposalDetails | SetReferralCutProposalDetails | SetWorkingGroupLeadRewardProposalDetails | SignalProposalDetails | SlashWorkingGroupLeadProposalDetails | TerminateWorkingGroupLeadProposalDetails | UpdateChannelPayoutsProposalDetails | UpdateGlobalNftLimitProposalDetails | UpdatePalletFrozenStatusProposalDetails | UpdateTokenPalletTokenConstraintsProposalDetails | UpdateWorkingGroupBudgetProposalDetails | VetoProposalDetails;
 
 export type ProposalDiscussionPost = BaseGraphQlObject & {
   __typename: 'ProposalDiscussionPost';
@@ -22373,6 +22512,9 @@ export type Query = {
   commentTextUpdatedEventsConnection: CommentTextUpdatedEventConnection;
   comments: Array<Comment>;
   commentsConnection: CommentConnection;
+  councilBudgetDecreasedEventByUniqueInput?: Maybe<CouncilBudgetDecreasedEvent>;
+  councilBudgetDecreasedEvents: Array<CouncilBudgetDecreasedEvent>;
+  councilBudgetDecreasedEventsConnection: CouncilBudgetDecreasedEventConnection;
   councilBudgetFundedEventByUniqueInput?: Maybe<CouncilBudgetFundedEvent>;
   councilBudgetFundedEvents: Array<CouncilBudgetFundedEvent>;
   councilBudgetFundedEventsConnection: CouncilBudgetFundedEventConnection;
@@ -22724,6 +22866,9 @@ export type Query = {
   upcomingWorkingGroupOpeningByUniqueInput?: Maybe<UpcomingWorkingGroupOpening>;
   upcomingWorkingGroupOpenings: Array<UpcomingWorkingGroupOpening>;
   upcomingWorkingGroupOpeningsConnection: UpcomingWorkingGroupOpeningConnection;
+  vestedBudgetSpendingEventByUniqueInput?: Maybe<VestedBudgetSpendingEvent>;
+  vestedBudgetSpendingEvents: Array<VestedBudgetSpendingEvent>;
+  vestedBudgetSpendingEventsConnection: VestedBudgetSpendingEventConnection;
   videoAssetsDeletedByModeratorEventByUniqueInput?: Maybe<VideoAssetsDeletedByModeratorEvent>;
   videoAssetsDeletedByModeratorEvents: Array<VideoAssetsDeletedByModeratorEvent>;
   videoAssetsDeletedByModeratorEventsConnection: VideoAssetsDeletedByModeratorEventConnection;
@@ -24324,6 +24469,29 @@ export type QueryCommentsConnectionArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CommentOrderByInput>>;
   where?: InputMaybe<CommentWhereInput>;
+};
+
+
+export type QueryCouncilBudgetDecreasedEventByUniqueInputArgs = {
+  where: CouncilBudgetDecreasedEventWhereUniqueInput;
+};
+
+
+export type QueryCouncilBudgetDecreasedEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouncilBudgetDecreasedEventOrderByInput>>;
+  where?: InputMaybe<CouncilBudgetDecreasedEventWhereInput>;
+};
+
+
+export type QueryCouncilBudgetDecreasedEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CouncilBudgetDecreasedEventOrderByInput>>;
+  where?: InputMaybe<CouncilBudgetDecreasedEventWhereInput>;
 };
 
 
@@ -27021,6 +27189,29 @@ export type QueryUpcomingWorkingGroupOpeningsConnectionArgs = {
 };
 
 
+export type QueryVestedBudgetSpendingEventByUniqueInputArgs = {
+  where: VestedBudgetSpendingEventWhereUniqueInput;
+};
+
+
+export type QueryVestedBudgetSpendingEventsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<VestedBudgetSpendingEventOrderByInput>>;
+  where?: InputMaybe<VestedBudgetSpendingEventWhereInput>;
+};
+
+
+export type QueryVestedBudgetSpendingEventsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<VestedBudgetSpendingEventOrderByInput>>;
+  where?: InputMaybe<VestedBudgetSpendingEventWhereInput>;
+};
+
+
 export type QueryVideoAssetsDeletedByModeratorEventByUniqueInputArgs = {
   where: VideoAssetsDeletedByModeratorEventWhereUniqueInput;
 };
@@ -29209,6 +29400,12 @@ export type SetCouncilorRewardProposalDetails = {
   __typename: 'SetCouncilorRewardProposalDetails';
   /** New (proposed) council members' reward per block */
   newRewardPerBlock: Scalars['BigInt']['output'];
+};
+
+export type SetEraPayoutDampingFactorProposalDetails = {
+  __typename: 'SetEraPayoutDampingFactorProposalDetails';
+  /** Proposed validator payout damping factor */
+  dampingFactor: Scalars['Int']['output'];
 };
 
 export type SetInitialInvitationBalanceProposalDetails = {
@@ -32332,6 +32529,36 @@ export type UpdateGlobalNftLimitProposalDetails = {
   newWeeklyNftLimit?: Maybe<Scalars['Int']['output']>;
 };
 
+export type UpdatePalletFrozenStatusProposalDetails = {
+  __typename: 'UpdatePalletFrozenStatusProposalDetails';
+  /** New frozen status for pallet */
+  frozen: Scalars['Boolean']['output'];
+  /** The pallet to update frozen status on */
+  pallet: Scalars['String']['output'];
+};
+
+export type UpdateTokenPalletTokenConstraintsProposalDetails = {
+  __typename: 'UpdateTokenPalletTokenConstraintsProposalDetails';
+  /** Proposed ratio of fees charged on top of each token purchase from the AMM (in part per million) */
+  ammBuyTxFees?: Maybe<Scalars['Int']['output']>;
+  /** Proposed ratio of fees charged on top of each token sold to the AMM (in part per million) */
+  ammSellTxFees?: Maybe<Scalars['Int']['output']>;
+  /** Proposed	bloat bond value used during account creation */
+  bloatBond?: Maybe<Scalars['BigInt']['output']>;
+  /** Proposed maximum patronage yearly interest rate (in part per million) */
+  maxYearlyRate?: Maybe<Scalars['Int']['output']>;
+  /** Proposed minimum value of the slope amm parameter */
+  minAmmSlope?: Maybe<Scalars['BigInt']['output']>;
+  /** Proposed minimum block duration for a revenue split */
+  minRevenueSplitDuration?: Maybe<Scalars['Int']['output']>;
+  /** Proposed minimum blocks between revenue share issuance block and actual revenue share starting block */
+  minRevenueSplitTimeToStart?: Maybe<Scalars['Int']['output']>;
+  /** Proposed minimum block duration of sales */
+  minSaleDuration?: Maybe<Scalars['Int']['output']>;
+  /** Proposed platform fee ratio charged on top of each sale and burned (in part per million) */
+  salePlatformFee?: Maybe<Scalars['Int']['output']>;
+};
+
 export type UpdateWorkingGroupBudgetProposalDetails = {
   __typename: 'UpdateWorkingGroupBudgetProposalDetails';
   /** Amount to increase / decrease the working group budget by (will be decudted from / appended to council budget accordingly) */
@@ -32343,6 +32570,190 @@ export type UpdateWorkingGroupBudgetProposalDetails = {
 export type VariantNone = {
   __typename: 'VariantNone';
   phantom?: Maybe<Scalars['Int']['output']>;
+};
+
+export type VestedBudgetSpendingEvent = BaseGraphQlObject & Event & {
+  __typename: 'VestedBudgetSpendingEvent';
+  /** Amount vested (this amount is fully locked until the starting block is reached) */
+  amount: Scalars['BigInt']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdById: Scalars['ID']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedById?: Maybe<Scalars['ID']['output']>;
+  group: WorkingGroup;
+  groupId: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  /** Blocknumber of the block in which the event was emitted. */
+  inBlock: Scalars['Int']['output'];
+  /** Hash of the extrinsic which caused the event to be emitted */
+  inExtrinsic?: Maybe<Scalars['String']['output']>;
+  /** Index of event in block from which it was emitted. */
+  indexInBlock: Scalars['Int']['output'];
+  /** Network the block was produced in */
+  network: Network;
+  /** Amount unlock at every block */
+  perBlock: Scalars['BigInt']['output'];
+  /** Optional rationale */
+  rationale?: Maybe<Scalars['String']['output']>;
+  /** Receiver account address */
+  receiver: Scalars['String']['output'];
+  /** Block height when the vesting schedule starts */
+  startingBlock: Scalars['Int']['output'];
+  /** Filtering options for interface implementers */
+  type?: Maybe<EventTypeOptions>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  updatedById?: Maybe<Scalars['ID']['output']>;
+  version: Scalars['Int']['output'];
+};
+
+export type VestedBudgetSpendingEventConnection = {
+  __typename: 'VestedBudgetSpendingEventConnection';
+  edges: Array<VestedBudgetSpendingEventEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type VestedBudgetSpendingEventCreateInput = {
+  amount: Scalars['String']['input'];
+  group: Scalars['ID']['input'];
+  inBlock: Scalars['Float']['input'];
+  inExtrinsic?: InputMaybe<Scalars['String']['input']>;
+  indexInBlock: Scalars['Float']['input'];
+  network: Network;
+  perBlock: Scalars['String']['input'];
+  rationale?: InputMaybe<Scalars['String']['input']>;
+  receiver: Scalars['String']['input'];
+  startingBlock: Scalars['Float']['input'];
+};
+
+export type VestedBudgetSpendingEventEdge = {
+  __typename: 'VestedBudgetSpendingEventEdge';
+  cursor: Scalars['String']['output'];
+  node: VestedBudgetSpendingEvent;
+};
+
+export enum VestedBudgetSpendingEventOrderByInput {
+  AmountAsc = 'amount_ASC',
+  AmountDesc = 'amount_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  DeletedAtAsc = 'deletedAt_ASC',
+  DeletedAtDesc = 'deletedAt_DESC',
+  GroupAsc = 'group_ASC',
+  GroupDesc = 'group_DESC',
+  InBlockAsc = 'inBlock_ASC',
+  InBlockDesc = 'inBlock_DESC',
+  InExtrinsicAsc = 'inExtrinsic_ASC',
+  InExtrinsicDesc = 'inExtrinsic_DESC',
+  IndexInBlockAsc = 'indexInBlock_ASC',
+  IndexInBlockDesc = 'indexInBlock_DESC',
+  NetworkAsc = 'network_ASC',
+  NetworkDesc = 'network_DESC',
+  PerBlockAsc = 'perBlock_ASC',
+  PerBlockDesc = 'perBlock_DESC',
+  RationaleAsc = 'rationale_ASC',
+  RationaleDesc = 'rationale_DESC',
+  ReceiverAsc = 'receiver_ASC',
+  ReceiverDesc = 'receiver_DESC',
+  StartingBlockAsc = 'startingBlock_ASC',
+  StartingBlockDesc = 'startingBlock_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC'
+}
+
+export type VestedBudgetSpendingEventUpdateInput = {
+  amount?: InputMaybe<Scalars['String']['input']>;
+  group?: InputMaybe<Scalars['ID']['input']>;
+  inBlock?: InputMaybe<Scalars['Float']['input']>;
+  inExtrinsic?: InputMaybe<Scalars['String']['input']>;
+  indexInBlock?: InputMaybe<Scalars['Float']['input']>;
+  network?: InputMaybe<Network>;
+  perBlock?: InputMaybe<Scalars['String']['input']>;
+  rationale?: InputMaybe<Scalars['String']['input']>;
+  receiver?: InputMaybe<Scalars['String']['input']>;
+  startingBlock?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type VestedBudgetSpendingEventWhereInput = {
+  AND?: InputMaybe<Array<VestedBudgetSpendingEventWhereInput>>;
+  NOT?: InputMaybe<Array<VestedBudgetSpendingEventWhereInput>>;
+  OR?: InputMaybe<Array<VestedBudgetSpendingEventWhereInput>>;
+  amount_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  amount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  amount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt_eq?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  createdById_eq?: InputMaybe<Scalars['ID']['input']>;
+  createdById_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  deletedAt_all?: InputMaybe<Scalars['Boolean']['input']>;
+  deletedAt_eq?: InputMaybe<Scalars['DateTime']['input']>;
+  deletedAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  deletedAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  deletedAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  deletedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  deletedById_eq?: InputMaybe<Scalars['ID']['input']>;
+  deletedById_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  group?: InputMaybe<WorkingGroupWhereInput>;
+  id_eq?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  inBlock_eq?: InputMaybe<Scalars['Int']['input']>;
+  inBlock_gt?: InputMaybe<Scalars['Int']['input']>;
+  inBlock_gte?: InputMaybe<Scalars['Int']['input']>;
+  inBlock_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  inBlock_lt?: InputMaybe<Scalars['Int']['input']>;
+  inBlock_lte?: InputMaybe<Scalars['Int']['input']>;
+  inExtrinsic_contains?: InputMaybe<Scalars['String']['input']>;
+  inExtrinsic_endsWith?: InputMaybe<Scalars['String']['input']>;
+  inExtrinsic_eq?: InputMaybe<Scalars['String']['input']>;
+  inExtrinsic_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  inExtrinsic_startsWith?: InputMaybe<Scalars['String']['input']>;
+  indexInBlock_eq?: InputMaybe<Scalars['Int']['input']>;
+  indexInBlock_gt?: InputMaybe<Scalars['Int']['input']>;
+  indexInBlock_gte?: InputMaybe<Scalars['Int']['input']>;
+  indexInBlock_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  indexInBlock_lt?: InputMaybe<Scalars['Int']['input']>;
+  indexInBlock_lte?: InputMaybe<Scalars['Int']['input']>;
+  network_eq?: InputMaybe<Network>;
+  network_in?: InputMaybe<Array<Network>>;
+  perBlock_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  perBlock_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  perBlock_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  perBlock_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  perBlock_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  perBlock_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  rationale_contains?: InputMaybe<Scalars['String']['input']>;
+  rationale_endsWith?: InputMaybe<Scalars['String']['input']>;
+  rationale_eq?: InputMaybe<Scalars['String']['input']>;
+  rationale_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  rationale_startsWith?: InputMaybe<Scalars['String']['input']>;
+  receiver_contains?: InputMaybe<Scalars['String']['input']>;
+  receiver_endsWith?: InputMaybe<Scalars['String']['input']>;
+  receiver_eq?: InputMaybe<Scalars['String']['input']>;
+  receiver_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  receiver_startsWith?: InputMaybe<Scalars['String']['input']>;
+  startingBlock_eq?: InputMaybe<Scalars['Int']['input']>;
+  startingBlock_gt?: InputMaybe<Scalars['Int']['input']>;
+  startingBlock_gte?: InputMaybe<Scalars['Int']['input']>;
+  startingBlock_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  startingBlock_lt?: InputMaybe<Scalars['Int']['input']>;
+  startingBlock_lte?: InputMaybe<Scalars['Int']['input']>;
+  updatedAt_eq?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedById_eq?: InputMaybe<Scalars['ID']['input']>;
+  updatedById_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+};
+
+export type VestedBudgetSpendingEventWhereUniqueInput = {
+  id: Scalars['ID']['input'];
 };
 
 export type VetoProposalDetails = {
@@ -32400,6 +32811,8 @@ export type Video = BaseGraphQlObject & {
   isPublic?: Maybe<Scalars['Boolean']['output']>;
   /** Is reactions feature enabled on video (true if enabled i.e. video can be reacted) */
   isReactionFeatureEnabled: Scalars['Boolean']['output'];
+  /** Whether the video is a short format, vertical video (e.g. Youtube Shorts, TikTok, Instagram Reels) */
+  isShort?: Maybe<Scalars['Boolean']['output']>;
   language?: Maybe<Language>;
   languageId?: Maybe<Scalars['String']['output']>;
   license?: Maybe<License>;
@@ -32775,6 +33188,7 @@ export type VideoCreateInput = {
   isExplicit?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isReactionFeatureEnabled: Scalars['Boolean']['input'];
+  isShort?: InputMaybe<Scalars['Boolean']['input']>;
   language?: InputMaybe<Scalars['ID']['input']>;
   license?: InputMaybe<Scalars['ID']['input']>;
   media?: InputMaybe<Scalars['ID']['input']>;
@@ -33345,6 +33759,8 @@ export enum VideoOrderByInput {
   IsPublicDesc = 'isPublic_DESC',
   IsReactionFeatureEnabledAsc = 'isReactionFeatureEnabled_ASC',
   IsReactionFeatureEnabledDesc = 'isReactionFeatureEnabled_DESC',
+  IsShortAsc = 'isShort_ASC',
+  IsShortDesc = 'isShort_DESC',
   LanguageAsc = 'language_ASC',
   LanguageDesc = 'language_DESC',
   LicenseAsc = 'license_ASC',
@@ -33996,6 +34412,7 @@ export type VideoUpdateInput = {
   isExplicit?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isReactionFeatureEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  isShort?: InputMaybe<Scalars['Boolean']['input']>;
   language?: InputMaybe<Scalars['ID']['input']>;
   license?: InputMaybe<Scalars['ID']['input']>;
   media?: InputMaybe<Scalars['ID']['input']>;
@@ -34272,6 +34689,8 @@ export type VideoWhereInput = {
   isPublic_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   isReactionFeatureEnabled_eq?: InputMaybe<Scalars['Boolean']['input']>;
   isReactionFeatureEnabled_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  isShort_eq?: InputMaybe<Scalars['Boolean']['input']>;
+  isShort_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
   language?: InputMaybe<LanguageWhereInput>;
   license?: InputMaybe<LicenseWhereInput>;
   media?: InputMaybe<StorageDataObjectWhereInput>;
@@ -36500,6 +36919,7 @@ export type WorkingGroup = BaseGraphQlObject & {
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   updatedById?: Maybe<Scalars['ID']['output']>;
   version: Scalars['Int']['output'];
+  vestedbudgetspendingeventgroup?: Maybe<Array<VestedBudgetSpendingEvent>>;
   workerexitedeventgroup?: Maybe<Array<WorkerExitedEvent>>;
   workerrewardaccountupdatedeventgroup?: Maybe<Array<WorkerRewardAccountUpdatedEvent>>;
   workerrewardamountupdatedeventgroup?: Maybe<Array<WorkerRewardAmountUpdatedEvent>>;
@@ -37305,6 +37725,9 @@ export type WorkingGroupWhereInput = {
   updatedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
   updatedById_eq?: InputMaybe<Scalars['ID']['input']>;
   updatedById_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  vestedbudgetspendingeventgroup_every?: InputMaybe<VestedBudgetSpendingEventWhereInput>;
+  vestedbudgetspendingeventgroup_none?: InputMaybe<VestedBudgetSpendingEventWhereInput>;
+  vestedbudgetspendingeventgroup_some?: InputMaybe<VestedBudgetSpendingEventWhereInput>;
   workerexitedeventgroup_every?: InputMaybe<WorkerExitedEventWhereInput>;
   workerexitedeventgroup_none?: InputMaybe<WorkerExitedEventWhereInput>;
   workerexitedeventgroup_some?: InputMaybe<WorkerExitedEventWhereInput>;

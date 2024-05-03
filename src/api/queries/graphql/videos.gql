@@ -45,3 +45,14 @@ query GetNonEmptyChannel($limit:Int,$offset:Int,$where:VideoWhereInput){
     createdAt
   }
 }
+
+query GetVideoCreationDate($limit: Int, $offset: Int, $where: VideoWhereInput) {
+  videos(
+    limit: $limit
+    offset: $offset
+    orderBy: createdAt_ASC
+    where: $where
+  ) {
+    createdAt
+  }
+}
