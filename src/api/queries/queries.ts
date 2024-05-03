@@ -1,16 +1,14 @@
-import { GraphQLClient } from "graphql-request";
 import { BN, BN_ZERO } from "@polkadot/util";
 import moment from "moment";
-import { QN_URL, FEE_QN_URL } from "@/config";
+import { FEE_QN_URL } from "@/config";
 import { asProposal, Proposal, WorkingGroup } from "@/types";
 
 import { getSdk } from "./__generated__/gql";
 import { toJoy, decimalAdjust, string2Joy } from "@/helpers";
 import { GroupIdToGroupParam, GroupIdName } from "@/types";
 import { DailyData, ChannelData } from "@/hooks/types";
+import { client } from "./client";
 export { getSdk } from "./__generated__/gql";
-
-export const client = new GraphQLClient(QN_URL);
 
 // StorageDataObjects
 
@@ -119,104 +117,17 @@ export const getStorageStatus = async (end: Date, start?: Date) => {
 
 // NonEmptyChannel
 
-export const getChannelStatus = async (
-  endBlockNumber: number,
-  startDate?: Date,
-) => {
-  const { GetVideoCount, GetNonEmptyChannel } = getSdk(client);
-  const defaultLimit = 5000;
-  let startCount: string[] = [];
-  let endCount: string[] = [];
-  let channelCount: number = 0;
-  let curDate = moment(startDate).format("YYYY-MM-DD");
-  const totalChannels: Array<ChannelData> = [];
-  const channelChart: Array<DailyData> = [];
-  const {
-    videosConnection: { totalCount: videoCount },
-  } = await GetVideoCount({
-    where: {
-      createdInBlock_lte: endBlockNumber,
-    },
-  });
-  const loop = Math.ceil(videoCount / defaultLimit);
-  for (let i = 0; i < loop; i++) {
-    const { videos } = await GetNonEmptyChannel({
-      where: {
-        createdInBlock_lte: endBlockNumber,
-      },
-      limit: defaultLimit,
-      offset: defaultLimit * i,
-    });
-    videos.map((video) => {
-      let flag = endCount.find((a) => {
-        return a == video.channelId;
-      });
-      if (!flag) {
-        if (startDate) {
-          let channelCreatedAt = new Date(video.channel.createdAt);
-          if (channelCreatedAt <= startDate) {
-            startCount.push(video.channelId);
-          }
-        }
-        totalChannels.push(video.channel);
-        endCount.push(video.channelId);
-      }
-    });
-  }
-  if (startDate) {
-    totalChannels
-      .sort((a1, a2) => {
-        if (a1.createdAt <= a2.createdAt) {
-          return -1;
-        } else {
-          return 1;
-        }
-      })
-      .filter((a) => {
-        return new Date(a.createdAt) > startDate;
-      })
-      .map((a) => {
-        if (moment(a.createdAt).format("YYYY-MM-DD") == curDate) {
-          channelCount += 1;
-        } else {
-          channelChart.push({
-            count: channelCount,
-            date: new Date(curDate),
-          });
-          channelCount = 1;
-          curDate = moment(a.createdAt).format("YYYY-MM-DD");
-        }
-      });
-    channelChart.push({
-      count: channelCount,
-      date: new Date(curDate),
-    });
-  }
-
-  return {
-    startCount: startCount.length,
-    endCount: endCount.length,
-    chartData: channelChart,
-  };
-};
-
 export const getChannelChartData = async (
   endBlock: number,
   startDate: Date,
+  totalCount: number,
 ) => {
-  const { GetVideoCount, GetNonEmptyChannel } = getSdk(client);
+  const { GetNonEmptyChannel } = getSdk(client);
   const defaultLimit = 5000;
   let channelCount: number = 0;
   const totalChannels: Array<ChannelData> = [];
   const channelChart: Array<DailyData> = [];
   let curDate = moment(startDate).format("YYYY-MM-DD");
-  const {
-    videosConnection: { totalCount },
-  } = await GetVideoCount({
-    where: {
-      createdInBlock_lte: endBlock,
-    },
-  });
   const loop = Math.ceil(totalCount / defaultLimit);
   for (let i = 0; i < loop; i++) {
     const { videos } = await GetNonEmptyChannel({
@@ -404,77 +315,17 @@ export const getVideoNftChartData = async (start: Date, end: Date) => {
 
 // Videos
 
-export const getVideoStatus = async (start: number, end: number) => {
-  const { GetVideoCount, GetNonEmptyChannel } = getSdk(client);
+export const getVideoChartData = async (
+  start: number,
+  end: number,
+  totalCount: number,
+) => {
+  const { GetNonEmptyChannel } = getSdk(client);
   const defaultLimit = 1000;
   let curDate = "";
   let count = 0;
   const videoChart: Array<DailyData> = [];
-  const {
-    videosConnection: { totalCount: startCount },
-  } = await GetVideoCount({
-    where: { createdInBlock_lt: start },
-  });
-  const {
-    videosConnection: { totalCount: endCount },
-  } = await GetVideoCount({
-    where: { createdInBlock_lte: end },
-  });
-  const growthQty = endCount - startCount;
-  const growthPct = decimalAdjust((growthQty / startCount) * 100);
-  let loop = Math.ceil(growthQty / defaultLimit);
-  for (let i = 0; i < loop; i++) {
-    const { videos } = await GetNonEmptyChannel({
-      where: {
-        createdInBlock_gte: start,
-        createdInBlock_lte: end,
-      },
-      limit: defaultLimit,
-      offset: defaultLimit * i,
-    });
-    if (curDate == "") {
-      curDate = moment(videos[0].createdAt).format("YYYY-MM-DD");
-    }
-    videos.map((video) => {
-      if (moment(video.createdAt).format("YYYY-MM-DD") == curDate) count++;
-      else {
-        videoChart.push({
-          date: new Date(curDate),
-          count,
-        });
-        count = 1;
-        curDate = moment(video.createdAt).format("YYYY-MM-DD");
-      }
-    });
-  }
-  videoChart.push({
-    date: new Date(curDate),
-    count,
-  });
-  return {
-    startBlock: startCount,
-    endBlock: endCount,
-    growthQty,
-    growthPct,
-    chartData: videoChart,
-  };
-};
-
-export const getVideoChartData = async (start: number, end: number) => {
-  const { GetNonEmptyChannel, GetVideoCount } = getSdk(client);
-  const defaultLimit = 1000;
-  let curDate = "";
-  let count = 0;
-  const videoChart: Array<DailyData> = [];
-  const {
-    videosConnection: { totalCount },
-  } = await GetVideoCount({
-    where: {
-      createdInBlock_gt: start,
-      createdInBlock_lte: end,
-    },
-  });
-  let loop = Math.ceil(totalCount / defaultLimit);
+  const loop = Math.ceil(totalCount / defaultLimit);
   for (let i = 0; i < loop; i++) {
     const { videos } = await GetNonEmptyChannel({
       where: {
