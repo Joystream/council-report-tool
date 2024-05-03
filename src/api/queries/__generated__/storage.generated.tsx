@@ -10,7 +10,7 @@ export type GetStorageDataObjectsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetStorageDataObjectsQuery = { __typename: 'Query', storageDataObjects: Array<{ __typename: 'StorageDataObject', id: string, createdAt: any, size: string }> };
+export type GetStorageDataObjectsQuery = { __typename: 'Query', storageDataObjects: Array<{ __typename: 'StorageDataObject', createdAt: any, size: string }> };
 
 export type GetStorageDataObjectsCountQueryVariables = Types.Exact<{
   where?: Types.InputMaybe<Types.StorageDataObjectWhereInput>;
@@ -35,7 +35,6 @@ export const GetStorageDataObjectsDocument = gql`
     where: $where
     orderBy: createdAt_ASC
   ) {
-    id
     createdAt
     size
   }

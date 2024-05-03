@@ -9,7 +9,6 @@ query GetStorageDataObjects(
     where: $where
     orderBy:createdAt_ASC
   ) {
-    id
     createdAt
     size
   }

@@ -4,3 +4,5 @@ export * from "./queries";
 export * from "./getNonEmptyChannelCount";
 export * from "./getNonEmptyChannelStatus";
 export * from "./getVideoStatus";
+export * from "./getStorageSize";
+export * from "./getStorageStatus";

@@ -38029,7 +38029,7 @@ export type GetStorageDataObjectsQueryVariables = Exact<{
 }>;
 
 
-export type GetStorageDataObjectsQuery = { __typename: 'Query', storageDataObjects: Array<{ __typename: 'StorageDataObject', id: string, createdAt: any, size: string }> };
+export type GetStorageDataObjectsQuery = { __typename: 'Query', storageDataObjects: Array<{ __typename: 'StorageDataObject', createdAt: any, size: string }> };
 
 export type GetStorageDataObjectsCountQueryVariables = Exact<{
   where?: InputMaybe<StorageDataObjectWhereInput>;
@@ -39290,7 +39290,6 @@ export const GetStorageDataObjectsDocument = gql`
     where: $where
     orderBy: createdAt_ASC
   ) {
-    id
     createdAt
     size
   }

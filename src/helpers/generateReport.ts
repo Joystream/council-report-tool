@@ -21,6 +21,7 @@ import {
   getSdk,
   getWorkingGroups,
   getStorageStatus,
+  getStorageSize,
   getWorkingGroupSalary,
   getCouncilReward,
   getFundingProposal,
@@ -87,12 +88,8 @@ export async function generateReport1(
     channelCount,
     nonEmptyChannelCount: await getNonEmptyChannelCount(blockNumber),
     nftCount,
-    totalStorage: 0,
+    totalStorage: storageFlag ? await getStorageSize(blockTimestamp) : 0,
   };
-  if (storageFlag) {
-    const { endStorage } = await getStorageStatus(blockTimestamp);
-    content.totalStorage = endStorage;
-  }
 
   const totalSupply = toJoy(await getTotalSupply(api, blockHash));
   const currentTotalSupply = await getOfficialTotalSupply();
@@ -257,25 +254,15 @@ export async function generateReport2(
     ),
   };
 
-  const mediaStorage = {
-    startBlock: 0,
-    endBlock: 0,
-    growthQty: 0,
-    growthPct: 0,
-    chartData: [] as Array<DailyData>,
-  };
-
-  if (storageFlag) {
-    const { startStorage, endStorage, chartData } = await getStorageStatus(
-      endBlockTimestamp,
-      startBlockTimestamp,
-    );
-    mediaStorage.startBlock = startStorage;
-    mediaStorage.endBlock = endStorage;
-    mediaStorage.growthQty = decimalAdjust(endStorage - startStorage);
-    mediaStorage.growthPct = decimalAdjust(endStorage / startStorage - 1) * 100;
-    mediaStorage.chartData = chartData;
-  }
+  const mediaStorage = storageFlag
+    ? await getStorageStatus(startBlockTimestamp, endBlockTimestamp)
+    : {
+        startBlock: 0,
+        endBlock: 0,
+        growthQty: 0,
+        growthPct: 0,
+        chartData: [] as Array<DailyData>,
+      };
 
   // 9. https://github.com/0x2bc/council/blob/main/Automation_Council_and_Weekly_Reports.md#channels
   const nonEmptyChannelStatus = await getNonEmptyChannelStatus(
@@ -513,22 +500,14 @@ export async function generateReport4(
   const videoStatus = await getVideoStatus(startBlockNumber, endBlockNumber);
 
   // storage
-  let mediaStorage = {
-    startBlock: 0,
-    endBlock: 0,
-    growthQty: 0,
-    growthPct: 0,
-  };
-  if (storageFlag) {
-    const { endStorage, startStorage } = await getStorageStatus(
-      endBlockTimestamp,
-      startBlockTimestamp,
-    );
-    mediaStorage.startBlock = startStorage;
-    mediaStorage.endBlock = endStorage;
-    mediaStorage.growthQty = decimalAdjust(endStorage - startStorage);
-    mediaStorage.growthPct = (endStorage / startStorage - 1) * 100;
-  }
+  const mediaStorage = storageFlag
+    ? await getStorageStatus(startBlockTimestamp, endBlockTimestamp)
+    : {
+        startBlock: 0,
+        endBlock: 0,
+        growthQty: 0,
+        growthPct: 0,
+      };
 
   // membership
 
