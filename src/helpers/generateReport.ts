@@ -279,8 +279,8 @@ export async function generateReport2(
 
   // 9. https://github.com/0x2bc/council/blob/main/Automation_Council_and_Weekly_Reports.md#channels
   const nonEmptyChannelStatus = await getNonEmptyChannelStatus(
-    endBlockNumber,
     startBlockNumber,
+    endBlockNumber,
   );
   const nonEmptyChannel = {
     ...nonEmptyChannelStatus,
@@ -504,8 +504,8 @@ export async function generateReport4(
   // nonEmptyChannel
 
   const nonEmptyChannel = await getNonEmptyChannelStatus(
-    endBlockNumber,
     startBlockNumber,
+    endBlockNumber,
   );
 
   // video
