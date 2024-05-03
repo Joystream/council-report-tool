@@ -37792,6 +37792,15 @@ export type GetCreatorPayoutRewardTotalCountQueryVariables = Exact<{
 
 export type GetCreatorPayoutRewardTotalCountQuery = { __typename: 'Query', channelRewardClaimedEventsConnection: { __typename: 'ChannelRewardClaimedEventConnection', totalCount: number } };
 
+export type GetChannelCreationDateQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ChannelWhereInput>;
+}>;
+
+
+export type GetChannelCreationDateQuery = { __typename: 'Query', channels: Array<{ __typename: 'Channel', createdAt: any }> };
+
 export type FullChannelFieldsFragment = { __typename: 'Channel', activeVideosCounter: number, description?: string | null, isPublic?: boolean | null, isCensored: boolean, id: string, title?: string | null, createdAt: any, rewardAccount: string, channelStateBloatBond: string, language?: { __typename: 'Language', id: string, iso: string } | null, ownerMember?: { __typename: 'Membership', id: string, handle: string, metadata: { __typename: 'MemberMetadata', about?: string | null, avatar?: { __typename: 'AvatarObject', avatarObject?: { __typename: 'StorageDataObject', id: string, createdAt: any, size: string, isAccepted: boolean, ipfsHash: string, storageBag: { __typename: 'StorageBag', id: string }, type: { __typename: 'DataObjectTypeChannelAvatar' } | { __typename: 'DataObjectTypeChannelCoverPhoto' } | { __typename: 'DataObjectTypeChannelPayoutsPayload' } | { __typename: 'DataObjectTypeUnknown' } | { __typename: 'DataObjectTypeVideoMedia' } | { __typename: 'DataObjectTypeVideoSubtitle' } | { __typename: 'DataObjectTypeVideoThumbnail' } } | null } | { __typename: 'AvatarUri', avatarUri: string } | null } } | null, coverPhoto?: { __typename: 'StorageDataObject', id: string, createdAt: any, size: string, isAccepted: boolean, ipfsHash: string, storageBag: { __typename: 'StorageBag', id: string }, type: { __typename: 'DataObjectTypeChannelAvatar' } | { __typename: 'DataObjectTypeChannelCoverPhoto' } | { __typename: 'DataObjectTypeChannelPayoutsPayload' } | { __typename: 'DataObjectTypeUnknown' } | { __typename: 'DataObjectTypeVideoMedia' } | { __typename: 'DataObjectTypeVideoSubtitle' } | { __typename: 'DataObjectTypeVideoThumbnail' } } | null, avatarPhoto?: { __typename: 'StorageDataObject', id: string, createdAt: any, size: string, isAccepted: boolean, ipfsHash: string, storageBag: { __typename: 'StorageBag', id: string }, type: { __typename: 'DataObjectTypeChannelAvatar' } | { __typename: 'DataObjectTypeChannelCoverPhoto' } | { __typename: 'DataObjectTypeChannelPayoutsPayload' } | { __typename: 'DataObjectTypeUnknown' } | { __typename: 'DataObjectTypeVideoMedia' } | { __typename: 'DataObjectTypeVideoSubtitle' } | { __typename: 'DataObjectTypeVideoThumbnail' } } | null };
 
 export type BasicMembershipFieldsFragment = { __typename: 'Membership', id: string, handle: string, metadata: { __typename: 'MemberMetadata', about?: string | null, avatar?: { __typename: 'AvatarObject', avatarObject?: { __typename: 'StorageDataObject', id: string, createdAt: any, size: string, isAccepted: boolean, ipfsHash: string, storageBag: { __typename: 'StorageBag', id: string }, type: { __typename: 'DataObjectTypeChannelAvatar' } | { __typename: 'DataObjectTypeChannelCoverPhoto' } | { __typename: 'DataObjectTypeChannelPayoutsPayload' } | { __typename: 'DataObjectTypeUnknown' } | { __typename: 'DataObjectTypeVideoMedia' } | { __typename: 'DataObjectTypeVideoSubtitle' } | { __typename: 'DataObjectTypeVideoThumbnail' } } | null } | { __typename: 'AvatarUri', avatarUri: string } | null } };
@@ -39011,6 +39020,13 @@ export const GetCreatorPayoutRewardTotalCountDocument = gql`
   }
 }
     `;
+export const GetChannelCreationDateDocument = gql`
+    query GetChannelCreationDate($limit: Int, $offset: Int, $where: ChannelWhereInput) {
+  channels(limit: $limit, offset: $offset, orderBy: createdAt_ASC, where: $where) {
+    createdAt
+  }
+}
+    `;
 export const GetElectedCouncilsDocument = gql`
     query GetElectedCouncils($where: ElectedCouncilWhereInput, $orderBy: [ElectedCouncilOrderByInput!], $offset: Int, $limit: Int) {
   electedCouncils(
@@ -39783,6 +39799,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetCreatorPayoutRewardTotalCount(variables?: GetCreatorPayoutRewardTotalCountQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCreatorPayoutRewardTotalCountQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetCreatorPayoutRewardTotalCountQuery>(GetCreatorPayoutRewardTotalCountDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetCreatorPayoutRewardTotalCount', 'query');
+    },
+    GetChannelCreationDate(variables?: GetChannelCreationDateQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetChannelCreationDateQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetChannelCreationDateQuery>(GetChannelCreationDateDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetChannelCreationDate', 'query');
     },
     GetElectedCouncils(variables?: GetElectedCouncilsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetElectedCouncilsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetElectedCouncilsQuery>(GetElectedCouncilsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetElectedCouncils', 'query');

@@ -38,6 +38,21 @@ query GetCreatorPayoutRewardTotalCount(
   }
 }
 
+query GetChannelCreationDate(
+  $limit: Int
+  $offset: Int
+  $where: ChannelWhereInput
+) {
+  channels(
+    limit: $limit
+    offset: $offset
+    orderBy: createdAt_ASC
+    where: $where
+  ) {
+    createdAt
+  }
+}
+
 fragment FullChannelFields on Channel {
   ...BasicChannelFields
   activeVideosCounter

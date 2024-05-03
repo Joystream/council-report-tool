@@ -118,62 +118,34 @@ export const getStorageStatus = async (end: Date, start?: Date) => {
 // NonEmptyChannel
 
 export const getChannelChartData = async (
-  endBlock: number,
-  startDate: Date,
+  start: number,
+  end: number,
   totalCount: number,
 ) => {
-  const { GetNonEmptyChannel } = getSdk(client);
-  const defaultLimit = 5000;
-  let channelCount: number = 0;
-  const totalChannels: Array<ChannelData> = [];
-  const channelChart: Array<DailyData> = [];
-  let curDate = moment(startDate).format("YYYY-MM-DD");
+  const chart: Map<string, number> = new Map();
+
+  const { GetChannelCreationDate } = getSdk(client);
+  const defaultLimit = 40_000;
   const loop = Math.ceil(totalCount / defaultLimit);
   for (let i = 0; i < loop; i++) {
-    const { videos } = await GetNonEmptyChannel({
+    const { channels } = await GetChannelCreationDate({
       where: {
-        createdInBlock_lte: endBlock,
+        createdInBlock_gt: start,
+        createdInBlock_lte: end,
+        totalVideosCreated_gt: 0,
       },
       limit: defaultLimit,
       offset: defaultLimit * i,
     });
-    videos.map((video) => {
-      let flag = totalChannels.find((channel) => {
-        return channel.id == video.channelId;
-      });
-      if (!flag) {
-        totalChannels.push(video.channel);
-      }
-    });
+    channels
+      .map(({ createdAt }) => createdAt.split("T")[0])
+      .forEach((date) => chart.set(date, (chart.get(date) || 0) + 1));
   }
-  totalChannels
-    .sort((a1, a2) => {
-      if (a1.createdAt <= a2.createdAt) {
-        return -1;
-      } else {
-        return 1;
-      }
-    })
-    .filter((a) => {
-      return new Date(a.createdAt) > startDate;
-    })
-    .map((a) => {
-      if (moment(a.createdAt).format("YYYY-MM-DD") == curDate) {
-        channelCount += 1;
-      } else {
-        channelChart.push({
-          count: channelCount,
-          date: new Date(curDate),
-        });
-        channelCount = 1;
-        curDate = moment(a.createdAt).format("YYYY-MM-DD");
-      }
-    });
-  channelChart.push({
-    count: channelCount,
-    date: new Date(curDate),
-  });
-  return channelChart;
+
+  return Array.from(chart.entries()).map(([date, count]) => ({
+    date: new Date(date),
+    count,
+  }));
 };
 
 // VideoNFT

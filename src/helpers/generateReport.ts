@@ -285,8 +285,8 @@ export async function generateReport2(
   const nonEmptyChannel = {
     ...nonEmptyChannelStatus,
     chartData: await getChannelChartData(
+      startBlockNumber,
       endBlockNumber,
-      startBlockTimestamp,
       nonEmptyChannelStatus.growthQty,
     ),
   };
