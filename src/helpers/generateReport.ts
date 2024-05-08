@@ -37,6 +37,7 @@ import {
   getCouncilRefill,
   getBurnedToken,
   getWGSpendingProposal,
+  getCrtStatus,
 } from "@/api";
 import { MEXC_WALLET, defaultDateTimeFormat } from "@/config";
 import { toJoy, string2Joy } from "./bn";
@@ -326,6 +327,13 @@ export async function generateReport2(
   //     underReviewStatuses.includes(p.status)
   //   );
 
+  const crt = await getCrtStatus(
+    startBlockNumber,
+    endBlockNumber,
+    startBlockTimestamp,
+    endBlockTimestamp,
+  );
+
   return {
     general,
     issuance,
@@ -337,6 +345,7 @@ export async function generateReport2(
     videoNFTs,
     membership,
     mediaStorage: storageFlag ? mediaStorage : undefined,
+    crt,
     proposals: {
       executed,
       deciding,

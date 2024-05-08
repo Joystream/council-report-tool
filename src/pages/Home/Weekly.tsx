@@ -66,6 +66,7 @@ export default function Weekly() {
   const [channelChart, setChannelChart] = useState<DailyData[]>([]);
   const [storageChart, setStorageChart] = useState<DailyData[]>([]);
   const [nftChart, setNftChart] = useState<DailyData[]>([]);
+  const [crtChart, setCrtChart] = useState<DailyData[]>([]);
   const [membershipChart, setMemberShipChart] = useState<DailyData[]>([]);
   const [loading, setLoading] = useState(false);
   const [storageFlag, setStorageFlag] = useState(false);
@@ -105,6 +106,7 @@ export default function Weekly() {
       setStorageChart([...report2.mediaStorage.chartData]);
     setChannelChart([...report2.nonEmptyChannel.chartData]);
     setNftChart([...report2.videoNFTs.chartData]);
+    setCrtChart([...report2.crt.chartData]);
     setMemberShipChart([...report2.membership.chartData]);
     setLoading(false);
   };
@@ -311,6 +313,11 @@ export default function Weekly() {
 
       <JoyChart data={videoChart} title="New Videos" id="videosChart" />
       <JoyChart data={nftChart} title="New NFT Minted" id="videoNftChart" />
+      <JoyChart
+        data={crtChart}
+        title="New circulating creator tokens (in JOY)"
+        id="crtChart"
+      />
       <JoyChart
         data={channelChart}
         title="New Non-empty channels"

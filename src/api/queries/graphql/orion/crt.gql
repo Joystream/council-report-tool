@@ -1,0 +1,31 @@
+query GetCrtTransactions(
+  $start: Int!
+  $end: Int!
+  $limit: Int!
+  $offset: Int!
+) {
+  ammTransactions(
+    where: { createdIn_gte: $start, createdIn_lte: $end }
+    limit: $limit
+    offset: $offset
+  ) {
+    transactionType
+    pricePaid
+  }
+}
+query GetCrtTransactionsWithBlock(
+  $start: Int!
+  $end: Int!
+  $limit: Int!
+  $offset: Int!
+) {
+  ammTransactions(
+    where: { createdIn_gte: $start, createdIn_lte: $end }
+    limit: $limit
+    offset: $offset
+  ) {
+    createdIn
+    transactionType
+    pricePaid
+  }
+}

@@ -1,5 +1,7 @@
 export const QN_URL =
   import.meta.env.VITE_QN_URL || "https://query.joystream.org/graphql";
+export const ORION_URL =
+  import.meta.env.VITE_ORION_URL || "https://orion.gleev.xyz/graphql";
 export const NODE_SOCKET =
   import.meta.env.VITE_NODE_SOCKET || "wss://rpc.joystream.org:9944";
 export const FEE_QN_URL = "https://monitoring.joyutils.org/fees/graphql";
