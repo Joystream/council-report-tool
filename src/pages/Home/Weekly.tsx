@@ -78,6 +78,7 @@ export default function Weekly() {
   const graphTypes = [
     "videosChart",
     "videoNftChart",
+    "crtChart",
     "nonEmptyChannelChart",
     "membershipChart",
     "mediaStorageChart",

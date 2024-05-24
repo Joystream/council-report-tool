@@ -78,6 +78,15 @@ Provided stats below are for non-empty channels only:
 
 ![_graph_videoNftChart](_graph_videoNftChart)
 
+### Creator tokens
+
+- Total market cap: **_crt_totalMCap JOY**
+- Weekly cumulative trading volume: **_crt_cumulativeGrowth  JOY**
+- Newly minted : **_crt_newlyMinted JOY**
+- Total revenue shares amount: **_crt_totalRevenueShares JOY**
+
+![_graph_videoNftChart](_graph_CrtChart)
+
 # **Membership**
 
 - Total Membership Accounts: **_membership_endBlock**
@@ -155,6 +164,15 @@ Provided stats below are for non-empty channels only:
 - Weekly NFT sold: _videoNFTs_soldQty
 
 ![_graph_videoNftChart](_graph_videoNftChart)
+
+### Creator tokens
+
+- Total market cap: **_crt_totalMCap JOY**
+- Weekly cumulative trading volume: **_crt_cumulativeGrowth  JOY**
+- Newly minted : **_crt_newlyMinted JOY**
+- Total revenue shares amount: **_crt_totalRevenueShares JOY**
+
+![_graph_videoNftChart](_graph_CrtChart)
 
 # **Membership**
 
