@@ -26,7 +26,8 @@ export const getStorageStatus = async (
   });
 
   const previousSize = totalSize - growthSize;
-  const growthPct = decimalAdjust((growthSize / previousSize - 1) * 100);
+  const growthPct =
+    previousSize && decimalAdjust((growthSize / previousSize) * 100);
 
   return {
     startBlock: previousSize / 1024 / 1024 / 1024, // WARNING: This property name is misleading
