@@ -1,6 +1,6 @@
 import BN from "bn.js";
 
-import { decimalAdjust, toJoy } from "@/helpers";
+import { toJoy } from "@/helpers";
 import { orionSdk } from "./sdk";
 import { AmmTransaction } from "./__generated__/orion.generated";
 
@@ -12,15 +12,20 @@ export const getCrtStatus = async (
   startDate: Date,
   endDate: Date,
 ) => {
-  const { GetCrtTransactions, GetCrtTransactionsWithBlock } = orionSdk;
-  const [previousTransactions, newTransactions] = await Promise.all([
-    getTransactions(0, start, GetCrtTransactions),
-    getTransactions(start, end, GetCrtTransactionsWithBlock),
-  ]);
-  const previousTotal = sumTransactions(previousTransactions);
-  const growth = sumTransactions(newTransactions);
-  const growthPct = decimalAdjust((growth * 100) / previousTotal);
-  const total = previousTotal + growth;
+  const {
+    GetCrtTransactions,
+    GetCrtTransactionsWithBlock,
+    GetRevenueSplitAmounts,
+  } = orionSdk;
+  const [previousTransactions, newTransactions, revenueSplits] =
+    await Promise.all([
+      getTransactions(0, start, GetCrtTransactions),
+      getTransactions(start, end, GetCrtTransactionsWithBlock),
+      GetRevenueSplitAmounts({ until: end }),
+    ]);
+  const previousCumulative = sumTransactions(previousTransactions);
+  const cumulativeGrowth = sumTransactions(newTransactions);
+  const totalMCap = previousCumulative + cumulativeGrowth;
 
   const startTsp = startDate.getTime();
   const endTsp = endDate.getTime();
@@ -37,7 +42,30 @@ export const getCrtStatus = async (
     count: value,
   }));
 
-  return { total, growth, growthPct, chartData };
+  const newlyMinted = newTransactions.reduce(
+    (sum, t) =>
+      sum + (t.transactionType === "SELL" ? 0 : toJoy(new BN(t.pricePaid))),
+    0,
+  );
+
+  const totalRevenueShares = revenueSplits.events
+    .flatMap((event) => {
+      if (!("revenueShare" in event.data) || !event.data.revenueShare) {
+        return [];
+      }
+      return event.data.revenueShare.stakers.map((staker) =>
+        toJoy(new BN(staker.earnings)),
+      );
+    })
+    .reduce((sum, amount) => sum + amount, 0);
+
+  return {
+    totalMCap,
+    cumulativeGrowth,
+    newlyMinted,
+    totalRevenueShares,
+    chartData,
+  };
 };
 
 type GetTransactionsQuery<T extends Partial<AmmTransaction>> = (arg: {
@@ -50,7 +78,7 @@ const getTransactions = async <T extends Partial<AmmTransaction>>(
   start: number,
   end: number,
   getTransactionsQuery: GetTransactionsQuery<T>,
-) => {
+): Promise<T[]> => {
   const transactions = [];
   for (let offset = 0; ; offset += limit) {
     const { ammTransactions } = await getTransactionsQuery({

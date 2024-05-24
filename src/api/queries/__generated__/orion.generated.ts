@@ -4802,6 +4802,13 @@ export type DistributionBucketsConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type EarningStatsOutput = {
+  __typename: 'EarningStatsOutput';
+  crtSaleVolume: Scalars['String']['output'];
+  nftSaleVolume: Scalars['String']['output'];
+  totalRewardsPaid: Scalars['String']['output'];
+};
+
 export type EmailDeliveryAttempt = {
   __typename: 'EmailDeliveryAttempt';
   /** UUID */
@@ -8359,6 +8366,7 @@ export type Query = {
   tokens: Array<Token>;
   tokensConnection: TokensConnection;
   topSellingChannels: Array<TopSellingChannelsResult>;
+  totalJoystreamEarnings: EarningStatsOutput;
   trailerVideoById?: Maybe<TrailerVideo>;
   /** @deprecated Use trailerVideoById */
   trailerVideoByUniqueInput?: Maybe<TrailerVideo>;
@@ -16321,6 +16329,13 @@ export type GetCrtTransactionsWithBlockQueryVariables = Exact<{
 
 export type GetCrtTransactionsWithBlockQuery = { __typename: 'Query', ammTransactions: Array<{ __typename: 'AmmTransaction', createdIn: number, transactionType: AmmTransactionType, pricePaid: string }> };
 
+export type GetRevenueSplitAmountsQueryVariables = Exact<{
+  until: Scalars['Int']['input'];
+}>;
+
+
+export type GetRevenueSplitAmountsQuery = { __typename: 'Query', events: Array<{ __typename: 'Event', data: { __typename: 'AuctionBidCanceledEventData' } | { __typename: 'AuctionBidMadeEventData' } | { __typename: 'AuctionCanceledEventData' } | { __typename: 'BidMadeCompletingAuctionEventData' } | { __typename: 'BuyNowCanceledEventData' } | { __typename: 'BuyNowPriceUpdatedEventData' } | { __typename: 'ChannelAssetsDeletedByModeratorEventData' } | { __typename: 'ChannelCreatedEventData' } | { __typename: 'ChannelFundsWithdrawnEventData' } | { __typename: 'ChannelPaymentMadeEventData' } | { __typename: 'ChannelPayoutsUpdatedEventData' } | { __typename: 'ChannelRewardClaimedAndWithdrawnEventData' } | { __typename: 'ChannelRewardClaimedEventData' } | { __typename: 'CommentCreatedEventData' } | { __typename: 'CommentReactionEventData' } | { __typename: 'CommentTextUpdatedEventData' } | { __typename: 'CreatorTokenIssuedEventData' } | { __typename: 'CreatorTokenMarketBurnEventData' } | { __typename: 'CreatorTokenMarketMintEventData' } | { __typename: 'CreatorTokenMarketStartedEventData' } | { __typename: 'CreatorTokenRevenueSplitIssuedEventData', revenueShare?: { __typename: 'RevenueShare', stakers: Array<{ __typename: 'RevenueShareParticipation', earnings: string }> } | null } | { __typename: 'CreatorTokenSaleMintEventData' } | { __typename: 'CreatorTokenSaleStartedEventData' } | { __typename: 'EnglishAuctionSettledEventData' } | { __typename: 'EnglishAuctionStartedEventData' } | { __typename: 'MemberBannedFromChannelEventData' } | { __typename: 'MetaprotocolTransactionStatusEventData' } | { __typename: 'NftBoughtEventData' } | { __typename: 'NftIssuedEventData' } | { __typename: 'NftOfferedEventData' } | { __typename: 'NftSellOrderMadeEventData' } | { __typename: 'OpenAuctionBidAcceptedEventData' } | { __typename: 'OpenAuctionStartedEventData' } | { __typename: 'VideoAssetsDeletedByModeratorEventData' } | { __typename: 'VideoCreatedEventData' } | { __typename: 'VideoReactionEventData' } }> };
+
 
 export const GetCrtTransactionsDocument = gql`
     query GetCrtTransactions($start: Int!, $end: Int!, $limit: Int!, $offset: Int!) {
@@ -16347,6 +16362,23 @@ export const GetCrtTransactionsWithBlockDocument = gql`
   }
 }
     `;
+export const GetRevenueSplitAmountsDocument = gql`
+    query GetRevenueSplitAmounts($until: Int!) {
+  events(
+    where: {data: {isTypeOf_eq: "CreatorTokenRevenueSplitIssuedEventData"}, inBlock_lte: $until}
+  ) {
+    data {
+      ... on CreatorTokenRevenueSplitIssuedEventData {
+        revenueShare {
+          stakers {
+            earnings
+          }
+        }
+      }
+    }
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
@@ -16360,6 +16392,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetCrtTransactionsWithBlock(variables: GetCrtTransactionsWithBlockQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCrtTransactionsWithBlockQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetCrtTransactionsWithBlockQuery>(GetCrtTransactionsWithBlockDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetCrtTransactionsWithBlock', 'query');
+    },
+    GetRevenueSplitAmounts(variables: GetRevenueSplitAmountsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetRevenueSplitAmountsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetRevenueSplitAmountsQuery>(GetRevenueSplitAmountsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRevenueSplitAmounts', 'query');
     }
   };
 }

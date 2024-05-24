@@ -29,3 +29,22 @@ query GetCrtTransactionsWithBlock(
     pricePaid
   }
 }
+
+query GetRevenueSplitAmounts($until: Int!) {
+  events(
+    where: {
+      data: { isTypeOf_eq: "CreatorTokenRevenueSplitIssuedEventData" }
+      inBlock_lte: $until
+    }
+  ) {
+    data {
+      ... on CreatorTokenRevenueSplitIssuedEventData {
+        revenueShare {
+          stakers {
+            earnings
+          }
+        }
+      }
+    }
+  }
+}
