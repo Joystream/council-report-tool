@@ -1,6 +1,6 @@
 import BN from "bn.js";
 
-import { toJoy } from "@/helpers";
+import { A_DAY, dayRange, toJoy } from "@/helpers";
 import { orionSdk } from "./sdk";
 import { AmmTransaction } from "./__generated__/orion.generated";
 
@@ -10,7 +10,7 @@ export const getCrtStatus = async (
   start: number,
   end: number,
   startDate: Date,
-  endDate: Date,
+  endDate: Date
 ) => {
   const {
     GetCrtTransactions,
@@ -23,29 +23,13 @@ export const getCrtStatus = async (
       getTransactions(start, end, GetCrtTransactionsWithBlock),
       GetRevenueSplitAmounts({ until: end }),
     ]);
-  const previousCumulative = sumTransactions(previousTransactions);
-  const cumulativeGrowth = sumTransactions(newTransactions);
-  const totalMCap = previousCumulative + cumulativeGrowth;
+  const previouslyMinted = sumTransactions(previousTransactions);
+  const newlyMinted = sumTransactions(newTransactions);
+  const totalMCap = previouslyMinted + newlyMinted;
 
-  const startTsp = startDate.getTime();
-  const endTsp = endDate.getTime();
-  const blockToDate = (endTsp - startTsp) / (end - start);
-  const chartMap = newTransactions.reduce((map, t) => {
-    const value = transactionValue(t);
-    const key = new Date(startTsp + (t.createdIn - start) * blockToDate)
-      .toISOString()
-      .split("T")[0];
-    return map.set(key, (map.get(key) ?? 0) + value);
-  }, new Map<string, number>());
-  const chartData = Array.from(chartMap.entries()).map(([date, value]) => ({
-    date: new Date(date),
-    count: value,
-  }));
-
-  const newlyMinted = newTransactions.reduce(
-    (sum, t) =>
-      sum + (t.transactionType === "SELL" ? 0 : toJoy(new BN(t.pricePaid))),
-    0,
+  const tradingVolume = newTransactions.reduce(
+    (sum, t) => sum + toJoy(new BN(t.pricePaid)),
+    0
   );
 
   const totalRevenueShares = revenueSplits.events
@@ -54,17 +38,17 @@ export const getCrtStatus = async (
         return [];
       }
       return event.data.revenueShare.stakers.map((staker) =>
-        toJoy(new BN(staker.earnings)),
+        toJoy(new BN(staker.earnings))
       );
     })
     .reduce((sum, amount) => sum + amount, 0);
 
   return {
     totalMCap,
-    cumulativeGrowth,
     newlyMinted,
+    tradingVolume,
     totalRevenueShares,
-    chartData,
+    chartData: chart(start, end, startDate, endDate, newTransactions),
   };
 };
 
@@ -77,7 +61,7 @@ type GetTransactionsQuery<T extends Partial<AmmTransaction>> = (arg: {
 const getTransactions = async <T extends Partial<AmmTransaction>>(
   start: number,
   end: number,
-  getTransactionsQuery: GetTransactionsQuery<T>,
+  getTransactionsQuery: GetTransactionsQuery<T>
 ): Promise<T[]> => {
   const transactions = [];
   for (let offset = 0; ; offset += limit) {
@@ -95,9 +79,41 @@ const getTransactions = async <T extends Partial<AmmTransaction>>(
 };
 
 const sumTransactions = (
-  transactions: Pick<AmmTransaction, "pricePaid" | "transactionType">[],
+  transactions: Pick<AmmTransaction, "pricePaid" | "transactionType">[]
 ) => transactions.reduce((sum, t) => sum + transactionValue(t), 0);
 
 const transactionValue = (
-  t: Pick<AmmTransaction, "pricePaid" | "transactionType">,
-) => toJoy(new BN(`${t.transactionType === "SELL" ? "-" : ""}${t.pricePaid}`));
+  t: Pick<AmmTransaction, "pricePaid" | "transactionType">
+): number => (t.transactionType === "SELL" ? 0 : toJoy(new BN(t.pricePaid)));
+
+const chart = (
+  start: number,
+  end: number,
+  startDate: Date,
+  endDate: Date,
+  newTransactions: Pick<
+    AmmTransaction,
+    "createdIn" | "pricePaid" | "transactionType"
+  >[]
+): { date: Date; count: number }[] => {
+  const startTsp = startDate.getTime();
+  const endTsp = endDate.getTime();
+
+  const blocksPerMs = (end - start) / (endTsp - startTsp);
+  const blocksPerDay = blocksPerMs * A_DAY;
+
+  let txs = [...newTransactions];
+
+  return dayRange(startDate, endDate).map((dayTsp) => {
+    const dayFirstBlock = start + (dayTsp - startTsp) * blocksPerMs;
+    const dayLastBlock = dayFirstBlock + blocksPerDay - 1;
+
+    const nextDayTxIndex = txs.findIndex((tx) => tx.createdIn > dayLastBlock);
+    const dayTxs = txs.splice(
+      0,
+      nextDayTxIndex === -1 ? txs.length : nextDayTxIndex
+    );
+
+    return { date: new Date(dayTsp), count: sumTransactions(dayTxs) };
+  });
+};

@@ -81,7 +81,7 @@ Provided stats below are for non-empty channels only:
 ### Creator tokens
 
 - Total market cap: **_crt_totalMCap JOY**
-- Weekly cumulative trading volume: **_crt_cumulativeGrowth  JOY**
+- Weekly cumulative trading volume: **_crt_tradingVolume  JOY**
 - Newly minted : **_crt_newlyMinted JOY**
 - Total revenue shares amount: **_crt_totalRevenueShares JOY**
 
@@ -168,7 +168,7 @@ Provided stats below are for non-empty channels only:
 ### Creator tokens
 
 - Total market cap: **_crt_totalMCap JOY**
-- Weekly cumulative trading volume: **_crt_cumulativeGrowth  JOY**
+- Weekly cumulative trading volume: **_crt_tradingVolume  JOY**
 - Newly minted : **_crt_newlyMinted JOY**
 - Total revenue shares amount: **_crt_totalRevenueShares JOY**
 
