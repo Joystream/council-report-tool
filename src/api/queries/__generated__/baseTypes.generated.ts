@@ -20761,7 +20761,7 @@ export type ProposalDecisionMadeEventWhereUniqueInput = {
 
 export type ProposalDecisionStatus = ProposalStatusCanceledByRuntime | ProposalStatusCancelled | ProposalStatusDormant | ProposalStatusExpired | ProposalStatusGracing | ProposalStatusRejected | ProposalStatusSlashed | ProposalStatusVetoed;
 
-export type ProposalDetails = AmendConstitutionProposalDetails | CancelWorkingGroupLeadOpeningProposalDetails | CreateWorkingGroupLeadOpeningProposalDetails | DecreaseCouncilBudgetProposalDetails | DecreaseWorkingGroupLeadStakeProposalDetails | FillWorkingGroupLeadOpeningProposalDetails | FundingRequestProposalDetails | RuntimeUpgradeProposalDetails | SetCouncilBudgetIncrementProposalDetails | SetCouncilorRewardProposalDetails | SetEraPayoutDampingFactorProposalDetails | SetInitialInvitationBalanceProposalDetails | SetInitialInvitationCountProposalDetails | SetMaxValidatorCountProposalDetails | SetMembershipLeadInvitationQuotaProposalDetails | SetMembershipPriceProposalDetails | SetReferralCutProposalDetails | SetWorkingGroupLeadRewardProposalDetails | SignalProposalDetails | SlashWorkingGroupLeadProposalDetails | TerminateWorkingGroupLeadProposalDetails | UpdateChannelPayoutsProposalDetails | UpdateGlobalNftLimitProposalDetails | UpdatePalletFrozenStatusProposalDetails | UpdateTokenPalletTokenConstraintsProposalDetails | UpdateWorkingGroupBudgetProposalDetails | VetoProposalDetails;
+export type ProposalDetails = AmendConstitutionProposalDetails | CancelWorkingGroupLeadOpeningProposalDetails | CreateWorkingGroupLeadOpeningProposalDetails | DecreaseCouncilBudgetProposalDetails | DecreaseWorkingGroupLeadStakeProposalDetails | FillWorkingGroupLeadOpeningProposalDetails | FundingRequestProposalDetails | RuntimeUpgradeProposalDetails | SetCouncilBudgetIncrementProposalDetails | SetCouncilorRewardProposalDetails | SetEraPayoutDampingFactorProposalDetails | SetInitialInvitationBalanceProposalDetails | SetInitialInvitationCountProposalDetails | SetMaxValidatorCountProposalDetails | SetMembershipLeadInvitationQuotaProposalDetails | SetMembershipPriceProposalDetails | SetReferralCutProposalDetails | SetWorkingGroupLeadRewardProposalDetails | SignalProposalDetails | SlashWorkingGroupLeadProposalDetails | TerminateWorkingGroupLeadProposalDetails | UpdateArgoBridgeConstraintsProposalDetails | UpdateChannelPayoutsProposalDetails | UpdateGlobalNftLimitProposalDetails | UpdatePalletFrozenStatusProposalDetails | UpdateTokenPalletTokenConstraintsProposalDetails | UpdateWorkingGroupBudgetProposalDetails | VetoProposalDetails;
 
 export type ProposalDiscussionPost = BaseGraphQlObject & {
   __typename: 'ProposalDiscussionPost';
@@ -32505,6 +32505,15 @@ export type UpcomingWorkingGroupOpeningWhereInput = {
 
 export type UpcomingWorkingGroupOpeningWhereUniqueInput = {
   id: Scalars['ID']['input'];
+};
+
+export type UpdateArgoBridgeConstraintsProposalDetails = {
+  __typename: 'UpdateArgoBridgeConstraintsProposalDetails';
+  bridgingFee?: Maybe<Scalars['BigInt']['output']>;
+  operatorAccount?: Maybe<Scalars['String']['output']>;
+  pauserAccounts?: Maybe<Array<Scalars['String']['output']>>;
+  remoteChains?: Maybe<Array<Scalars['Int']['output']>>;
+  thawnDuration?: Maybe<Scalars['Int']['output']>;
 };
 
 export type UpdateChannelPayoutsProposalDetails = {

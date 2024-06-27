@@ -82,7 +82,7 @@ Provided stats below are for non-empty channels only:
 
 - Total market cap: **_crt_totalMCap JOY**
 - Weekly cumulative trading volume: **_crt_tradingVolume  JOY**
-- Newly minted : **_crt_newlyMinted JOY**
+- Newly issued: **_crt_newlyIssuedTokens**
 - Total revenue shares amount: **_crt_totalRevenueShares JOY**
 
 ![_graph_videoNftChart](_graph_CrtChart)
@@ -169,7 +169,7 @@ Provided stats below are for non-empty channels only:
 
 - Total market cap: **_crt_totalMCap JOY**
 - Weekly cumulative trading volume: **_crt_tradingVolume  JOY**
-- Newly minted : **_crt_newlyMinted JOY**
+- Newly issued: **_crt_newlyIssuedTokens**
 - Total revenue shares amount: **_crt_totalRevenueShares JOY**
 
 ![_graph_videoNftChart](_graph_CrtChart)

@@ -15,8 +15,10 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: string; output: string; }
+  BigDecimal: { input: any; output: any; }
   BigInt: { input: string; output: string; }
   DateTime: { input: any; output: any; }
+  id_ASC: { input: any; output: any; }
 };
 
 /** A Gateway Account */
@@ -5844,6 +5846,447 @@ export type MarkNotificationsAsReadResult = {
   notificationsReadIds: Array<Scalars['String']['output']>;
 };
 
+export type MarketplaceToken = {
+  __typename: 'MarketplaceToken';
+  /** number of accounts to avoid aggregate COUNT */
+  accountsNum: Scalars['Int']['output'];
+  ammVolume?: Maybe<Scalars['BigInt']['output']>;
+  /** creator annual revenue (minted) */
+  annualCreatorRewardPermill: Scalars['Int']['output'];
+  /** avatar object (profile picture) */
+  avatar?: Maybe<TokenAvatar>;
+  /** channel from which the token is issued uniqueness guaranteed by runtime */
+  channelId?: Maybe<Scalars['String']['output']>;
+  /** date at which this token was created */
+  createdAt: Scalars['DateTime']['output'];
+  cumulativeRevenue?: Maybe<Scalars['BigInt']['output']>;
+  /** current amm sale if ongoing */
+  currentAmmSaleId?: Maybe<Scalars['String']['output']>;
+  /** current revenue share if ongoing */
+  currentRevenueShareId?: Maybe<Scalars['String']['output']>;
+  /** current sale if ongoing */
+  currentSaleId?: Maybe<Scalars['String']['output']>;
+  /** whether it has been deissued or not */
+  deissued: Scalars['Boolean']['output'];
+  /** about information displayed under the presentation video */
+  description?: Maybe<Scalars['String']['output']>;
+  /** runtime token identifier */
+  id: Scalars['String']['output'];
+  /** Flag to indicate whether the CRT is featured or not */
+  isFeatured: Scalars['Boolean']['output'];
+  /** access status invite only vs anyone */
+  isInviteOnly: Scalars['Boolean']['output'];
+  lastDayPriceChange?: Maybe<Scalars['BigDecimal']['output']>;
+  /** last unit price available */
+  lastPrice?: Maybe<Scalars['BigInt']['output']>;
+  liquidity?: Maybe<Scalars['Int']['output']>;
+  marketCap?: Maybe<Scalars['BigInt']['output']>;
+  /** number of revenue shares issued */
+  numberOfRevenueShareActivations: Scalars['Int']['output'];
+  /** number of vested transfer completed */
+  numberOfVestedTransferIssued: Scalars['Int']['output'];
+  /** revenue share ratio between creator and holder */
+  revenueShareRatioPermill: Scalars['Int']['output'];
+  /** status sale / market / idle */
+  status: TokenStatus;
+  /** symbol for the token uniqueness guaranteed by runtime */
+  symbol?: Maybe<Scalars['String']['output']>;
+  /** total supply */
+  totalSupply: Scalars['BigInt']['output'];
+  weeklyLiqChange?: Maybe<Scalars['BigDecimal']['output']>;
+  /** link for creator to member interested in joining the whitelist */
+  whitelistApplicantLink?: Maybe<Scalars['String']['output']>;
+  /** note from creator to member interested in joining the whitelist */
+  whitelistApplicantNote?: Maybe<Scalars['String']['output']>;
+};
+
+export type MarketplaceTokenCount = {
+  __typename: 'MarketplaceTokenCount';
+  count: Scalars['Int']['output'];
+};
+
+export type MarketplaceTokenEdge = {
+  __typename: 'MarketplaceTokenEdge';
+  cursor: Scalars['String']['output'];
+  node: MarketplaceToken;
+};
+
+export enum MarketplaceTokenOrderByInput {
+  AccountsNumAsc = 'accountsNum_ASC',
+  AccountsNumDesc = 'accountsNum_DESC',
+  AmmVolumeAsc = 'ammVolume_ASC',
+  AmmVolumeDesc = 'ammVolume_DESC',
+  AnnualCreatorRewardPermillAsc = 'annualCreatorRewardPermill_ASC',
+  AnnualCreatorRewardPermillDesc = 'annualCreatorRewardPermill_DESC',
+  AvatarAvatarUriAsc = 'avatar_avatarUri_ASC',
+  AvatarAvatarUriDesc = 'avatar_avatarUri_DESC',
+  AvatarIsTypeOfAsc = 'avatar_isTypeOf_ASC',
+  AvatarIsTypeOfDesc = 'avatar_isTypeOf_DESC',
+  ChannelIdAsc = 'channelId_ASC',
+  ChannelIdDesc = 'channelId_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  CumulativeRevenueAsc = 'cumulativeRevenue_ASC',
+  CumulativeRevenueDesc = 'cumulativeRevenue_DESC',
+  CurrentAmmSaleIdAsc = 'currentAmmSaleId_ASC',
+  CurrentAmmSaleIdDesc = 'currentAmmSaleId_DESC',
+  CurrentRevenueShareIdAsc = 'currentRevenueShareId_ASC',
+  CurrentRevenueShareIdDesc = 'currentRevenueShareId_DESC',
+  CurrentSaleIdAsc = 'currentSaleId_ASC',
+  CurrentSaleIdDesc = 'currentSaleId_DESC',
+  DeissuedAsc = 'deissued_ASC',
+  DeissuedDesc = 'deissued_DESC',
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IsFeaturedAsc = 'isFeatured_ASC',
+  IsFeaturedDesc = 'isFeatured_DESC',
+  IsInviteOnlyAsc = 'isInviteOnly_ASC',
+  IsInviteOnlyDesc = 'isInviteOnly_DESC',
+  LastDayPriceChangeAsc = 'lastDayPriceChange_ASC',
+  LastDayPriceChangeDesc = 'lastDayPriceChange_DESC',
+  LastPriceAsc = 'lastPrice_ASC',
+  LastPriceDesc = 'lastPrice_DESC',
+  LiquidityAsc = 'liquidity_ASC',
+  LiquidityDesc = 'liquidity_DESC',
+  MarketCapAsc = 'marketCap_ASC',
+  MarketCapDesc = 'marketCap_DESC',
+  NumberOfRevenueShareActivationsAsc = 'numberOfRevenueShareActivations_ASC',
+  NumberOfRevenueShareActivationsDesc = 'numberOfRevenueShareActivations_DESC',
+  NumberOfVestedTransferIssuedAsc = 'numberOfVestedTransferIssued_ASC',
+  NumberOfVestedTransferIssuedDesc = 'numberOfVestedTransferIssued_DESC',
+  RevenueShareRatioPermillAsc = 'revenueShareRatioPermill_ASC',
+  RevenueShareRatioPermillDesc = 'revenueShareRatioPermill_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SymbolAsc = 'symbol_ASC',
+  SymbolDesc = 'symbol_DESC',
+  TotalSupplyAsc = 'totalSupply_ASC',
+  TotalSupplyDesc = 'totalSupply_DESC',
+  WeeklyLiqChangeAsc = 'weeklyLiqChange_ASC',
+  WeeklyLiqChangeDesc = 'weeklyLiqChange_DESC',
+  WhitelistApplicantLinkAsc = 'whitelistApplicantLink_ASC',
+  WhitelistApplicantLinkDesc = 'whitelistApplicantLink_DESC',
+  WhitelistApplicantNoteAsc = 'whitelistApplicantNote_ASC',
+  WhitelistApplicantNoteDesc = 'whitelistApplicantNote_DESC'
+}
+
+export type MarketplaceTokenWhereInput = {
+  AND?: InputMaybe<Array<MarketplaceTokenWhereInput>>;
+  OR?: InputMaybe<Array<MarketplaceTokenWhereInput>>;
+  accountsNum_eq?: InputMaybe<Scalars['Int']['input']>;
+  accountsNum_gt?: InputMaybe<Scalars['Int']['input']>;
+  accountsNum_gte?: InputMaybe<Scalars['Int']['input']>;
+  accountsNum_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  accountsNum_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  accountsNum_lt?: InputMaybe<Scalars['Int']['input']>;
+  accountsNum_lte?: InputMaybe<Scalars['Int']['input']>;
+  accountsNum_not_eq?: InputMaybe<Scalars['Int']['input']>;
+  accountsNum_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  ammVolume_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  ammVolume_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  ammVolume_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  ammVolume_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  ammVolume_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  ammVolume_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  ammVolume_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  ammVolume_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  ammVolume_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  annualCreatorRewardPermill_eq?: InputMaybe<Scalars['Int']['input']>;
+  annualCreatorRewardPermill_gt?: InputMaybe<Scalars['Int']['input']>;
+  annualCreatorRewardPermill_gte?: InputMaybe<Scalars['Int']['input']>;
+  annualCreatorRewardPermill_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  annualCreatorRewardPermill_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  annualCreatorRewardPermill_lt?: InputMaybe<Scalars['Int']['input']>;
+  annualCreatorRewardPermill_lte?: InputMaybe<Scalars['Int']['input']>;
+  annualCreatorRewardPermill_not_eq?: InputMaybe<Scalars['Int']['input']>;
+  annualCreatorRewardPermill_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  avatar?: InputMaybe<TokenAvatarWhereInput>;
+  avatar_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  channelId_contains?: InputMaybe<Scalars['String']['input']>;
+  channelId_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  channelId_endsWith?: InputMaybe<Scalars['String']['input']>;
+  channelId_eq?: InputMaybe<Scalars['String']['input']>;
+  channelId_gt?: InputMaybe<Scalars['String']['input']>;
+  channelId_gte?: InputMaybe<Scalars['String']['input']>;
+  channelId_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  channelId_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  channelId_lt?: InputMaybe<Scalars['String']['input']>;
+  channelId_lte?: InputMaybe<Scalars['String']['input']>;
+  channelId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  channelId_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  channelId_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  channelId_not_eq?: InputMaybe<Scalars['String']['input']>;
+  channelId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  channelId_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  channelId_startsWith?: InputMaybe<Scalars['String']['input']>;
+  createdAt_eq?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
+  createdAt_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  createdAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_not_eq?: InputMaybe<Scalars['DateTime']['input']>;
+  createdAt_not_in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
+  cumulativeRevenue_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  cumulativeRevenue_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  cumulativeRevenue_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  cumulativeRevenue_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  cumulativeRevenue_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  cumulativeRevenue_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  cumulativeRevenue_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  cumulativeRevenue_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  cumulativeRevenue_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  currentAmmSaleId_contains?: InputMaybe<Scalars['String']['input']>;
+  currentAmmSaleId_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  currentAmmSaleId_endsWith?: InputMaybe<Scalars['String']['input']>;
+  currentAmmSaleId_eq?: InputMaybe<Scalars['String']['input']>;
+  currentAmmSaleId_gt?: InputMaybe<Scalars['String']['input']>;
+  currentAmmSaleId_gte?: InputMaybe<Scalars['String']['input']>;
+  currentAmmSaleId_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  currentAmmSaleId_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  currentAmmSaleId_lt?: InputMaybe<Scalars['String']['input']>;
+  currentAmmSaleId_lte?: InputMaybe<Scalars['String']['input']>;
+  currentAmmSaleId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  currentAmmSaleId_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  currentAmmSaleId_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  currentAmmSaleId_not_eq?: InputMaybe<Scalars['String']['input']>;
+  currentAmmSaleId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  currentAmmSaleId_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  currentAmmSaleId_startsWith?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_contains?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_endsWith?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_eq?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_gt?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_gte?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  currentRevenueShareId_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  currentRevenueShareId_lt?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_lte?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_not_eq?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  currentRevenueShareId_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  currentRevenueShareId_startsWith?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_contains?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_endsWith?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_eq?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_gt?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_gte?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  currentSaleId_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  currentSaleId_lt?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_lte?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_not_eq?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  currentSaleId_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  currentSaleId_startsWith?: InputMaybe<Scalars['String']['input']>;
+  deissued_eq?: InputMaybe<Scalars['Boolean']['input']>;
+  deissued_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  deissued_not_eq?: InputMaybe<Scalars['Boolean']['input']>;
+  description_contains?: InputMaybe<Scalars['String']['input']>;
+  description_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  description_endsWith?: InputMaybe<Scalars['String']['input']>;
+  description_eq?: InputMaybe<Scalars['String']['input']>;
+  description_gt?: InputMaybe<Scalars['String']['input']>;
+  description_gte?: InputMaybe<Scalars['String']['input']>;
+  description_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  description_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  description_lt?: InputMaybe<Scalars['String']['input']>;
+  description_lte?: InputMaybe<Scalars['String']['input']>;
+  description_not_contains?: InputMaybe<Scalars['String']['input']>;
+  description_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  description_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  description_not_eq?: InputMaybe<Scalars['String']['input']>;
+  description_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  description_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  description_startsWith?: InputMaybe<Scalars['String']['input']>;
+  id_contains?: InputMaybe<Scalars['String']['input']>;
+  id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  id_endsWith?: InputMaybe<Scalars['String']['input']>;
+  id_eq?: InputMaybe<Scalars['String']['input']>;
+  id_gt?: InputMaybe<Scalars['String']['input']>;
+  id_gte?: InputMaybe<Scalars['String']['input']>;
+  id_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  id_lt?: InputMaybe<Scalars['String']['input']>;
+  id_lte?: InputMaybe<Scalars['String']['input']>;
+  id_not_contains?: InputMaybe<Scalars['String']['input']>;
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  id_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  id_not_eq?: InputMaybe<Scalars['String']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  isFeatured_eq?: InputMaybe<Scalars['Boolean']['input']>;
+  isFeatured_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  isFeatured_not_eq?: InputMaybe<Scalars['Boolean']['input']>;
+  isInviteOnly_eq?: InputMaybe<Scalars['Boolean']['input']>;
+  isInviteOnly_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  isInviteOnly_not_eq?: InputMaybe<Scalars['Boolean']['input']>;
+  lastDayPriceChange_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastDayPriceChange_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastDayPriceChange_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastDayPriceChange_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  lastDayPriceChange_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastDayPriceChange_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastDayPriceChange_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastDayPriceChange_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  lastDayPriceChange_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  lastPrice_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastPrice_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastPrice_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastPrice_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  lastPrice_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  lastPrice_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lastPrice_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lastPrice_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  lastPrice_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  liquidity_eq?: InputMaybe<Scalars['Int']['input']>;
+  liquidity_gt?: InputMaybe<Scalars['Int']['input']>;
+  liquidity_gte?: InputMaybe<Scalars['Int']['input']>;
+  liquidity_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  liquidity_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  liquidity_lt?: InputMaybe<Scalars['Int']['input']>;
+  liquidity_lte?: InputMaybe<Scalars['Int']['input']>;
+  liquidity_not_eq?: InputMaybe<Scalars['Int']['input']>;
+  liquidity_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  marketCap_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  marketCap_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  marketCap_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  marketCap_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  marketCap_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  marketCap_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  marketCap_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  marketCap_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  marketCap_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  numberOfRevenueShareActivations_eq?: InputMaybe<Scalars['Int']['input']>;
+  numberOfRevenueShareActivations_gt?: InputMaybe<Scalars['Int']['input']>;
+  numberOfRevenueShareActivations_gte?: InputMaybe<Scalars['Int']['input']>;
+  numberOfRevenueShareActivations_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  numberOfRevenueShareActivations_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  numberOfRevenueShareActivations_lt?: InputMaybe<Scalars['Int']['input']>;
+  numberOfRevenueShareActivations_lte?: InputMaybe<Scalars['Int']['input']>;
+  numberOfRevenueShareActivations_not_eq?: InputMaybe<Scalars['Int']['input']>;
+  numberOfRevenueShareActivations_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  numberOfVestedTransferIssued_eq?: InputMaybe<Scalars['Int']['input']>;
+  numberOfVestedTransferIssued_gt?: InputMaybe<Scalars['Int']['input']>;
+  numberOfVestedTransferIssued_gte?: InputMaybe<Scalars['Int']['input']>;
+  numberOfVestedTransferIssued_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  numberOfVestedTransferIssued_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  numberOfVestedTransferIssued_lt?: InputMaybe<Scalars['Int']['input']>;
+  numberOfVestedTransferIssued_lte?: InputMaybe<Scalars['Int']['input']>;
+  numberOfVestedTransferIssued_not_eq?: InputMaybe<Scalars['Int']['input']>;
+  numberOfVestedTransferIssued_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  revenueShareRatioPermill_eq?: InputMaybe<Scalars['Int']['input']>;
+  revenueShareRatioPermill_gt?: InputMaybe<Scalars['Int']['input']>;
+  revenueShareRatioPermill_gte?: InputMaybe<Scalars['Int']['input']>;
+  revenueShareRatioPermill_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  revenueShareRatioPermill_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  revenueShareRatioPermill_lt?: InputMaybe<Scalars['Int']['input']>;
+  revenueShareRatioPermill_lte?: InputMaybe<Scalars['Int']['input']>;
+  revenueShareRatioPermill_not_eq?: InputMaybe<Scalars['Int']['input']>;
+  revenueShareRatioPermill_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  status_eq?: InputMaybe<TokenStatus>;
+  status_in?: InputMaybe<Array<TokenStatus>>;
+  status_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  status_not_eq?: InputMaybe<TokenStatus>;
+  status_not_in?: InputMaybe<Array<TokenStatus>>;
+  symbol_contains?: InputMaybe<Scalars['String']['input']>;
+  symbol_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  symbol_endsWith?: InputMaybe<Scalars['String']['input']>;
+  symbol_eq?: InputMaybe<Scalars['String']['input']>;
+  symbol_gt?: InputMaybe<Scalars['String']['input']>;
+  symbol_gte?: InputMaybe<Scalars['String']['input']>;
+  symbol_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  symbol_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  symbol_lt?: InputMaybe<Scalars['String']['input']>;
+  symbol_lte?: InputMaybe<Scalars['String']['input']>;
+  symbol_not_contains?: InputMaybe<Scalars['String']['input']>;
+  symbol_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  symbol_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  symbol_not_eq?: InputMaybe<Scalars['String']['input']>;
+  symbol_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  symbol_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  symbol_startsWith?: InputMaybe<Scalars['String']['input']>;
+  totalSupply_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  totalSupply_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  totalSupply_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  totalSupply_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  totalSupply_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  totalSupply_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  totalSupply_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  totalSupply_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  totalSupply_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  weeklyLiqChange_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyLiqChange_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyLiqChange_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyLiqChange_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  weeklyLiqChange_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  weeklyLiqChange_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyLiqChange_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyLiqChange_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  weeklyLiqChange_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  whitelistApplicantLink_contains?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantLink_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantLink_endsWith?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantLink_eq?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantLink_gt?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantLink_gte?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantLink_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  whitelistApplicantLink_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  whitelistApplicantLink_lt?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantLink_lte?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantLink_not_contains?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantLink_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantLink_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantLink_not_eq?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantLink_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  whitelistApplicantLink_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantLink_startsWith?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_contains?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_endsWith?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_eq?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_gt?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_gte?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  whitelistApplicantNote_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  whitelistApplicantNote_lt?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_lte?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_not_contains?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_not_eq?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  whitelistApplicantNote_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  whitelistApplicantNote_startsWith?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MarketplaceTokensConnection = {
+  __typename: 'MarketplaceTokensConnection';
+  edges: Array<MarketplaceTokenEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type MarketplaceTokensReturnType = {
+  __typename: 'MarketplaceTokensReturnType';
+  creatorToken: CreatorToken;
+  pricePercentageChange: Scalars['Float']['output'];
+  /** Type of the result: hot | cold */
+  resultType: Scalars['String']['output'];
+};
+
 export type MaxAttemptsOnMailDelivery = {
   __typename: 'MaxAttemptsOnMailDelivery';
   maxAttempts: Scalars['Int']['output'];
@@ -8241,12 +8684,20 @@ export type Query = {
   getAccountTransferrableBalance: GetAccountTransferrableBalanceResult;
   getCumulativeHistoricalShareAllocation: GetCumulativeHistoricalShareAllocationResult;
   getKillSwitch: KillSwitch;
+  getMarketplaceTokens: Array<MarketplaceToken>;
+  getMarketplaceTokensCount: MarketplaceTokenCount;
   getShareDividend: GetShareDividendsResult;
+  hotAndColdTokens: Array<MarketplaceTokensReturnType>;
   licenseById?: Maybe<License>;
   /** @deprecated Use licenseById */
   licenseByUniqueInput?: Maybe<License>;
   licenses: Array<License>;
   licensesConnection: LicensesConnection;
+  marketplaceTokenById?: Maybe<MarketplaceToken>;
+  /** @deprecated Use marketplaceTokenById */
+  marketplaceTokenByUniqueInput?: Maybe<MarketplaceToken>;
+  marketplaceTokens: Array<MarketplaceToken>;
+  marketplaceTokensConnection: MarketplaceTokensConnection;
   memberMetadata: Array<MemberMetadata>;
   memberMetadataById?: Maybe<MemberMetadata>;
   /** @deprecated Use memberMetadataById */
@@ -8366,6 +8817,7 @@ export type Query = {
   tokens: Array<Token>;
   tokensConnection: TokensConnection;
   topSellingChannels: Array<TopSellingChannelsResult>;
+  topSellingToken: Array<TopSellingTokensReturnType>;
   totalJoystreamEarnings: EarningStatsOutput;
   trailerVideoById?: Maybe<TrailerVideo>;
   /** @deprecated Use trailerVideoById */
@@ -9235,9 +9687,28 @@ export type QueryGetCumulativeHistoricalShareAllocationArgs = {
 };
 
 
+export type QueryGetMarketplaceTokensArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<Scalars['id_ASC']['input']>>;
+  where?: InputMaybe<MarketplaceTokenWhereInput>;
+};
+
+
+export type QueryGetMarketplaceTokensCountArgs = {
+  where?: InputMaybe<MarketplaceTokenWhereInput>;
+};
+
+
 export type QueryGetShareDividendArgs = {
   stakingAmount: Scalars['Int']['input'];
   tokenId: Scalars['String']['input'];
+};
+
+
+export type QueryHotAndColdTokensArgs = {
+  periodDays: Scalars['Int']['input'];
+  where?: InputMaybe<CreatorTokenWhereInput>;
 };
 
 
@@ -9264,6 +9735,32 @@ export type QueryLicensesConnectionArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy: Array<LicenseOrderByInput>;
   where?: InputMaybe<LicenseWhereInput>;
+};
+
+
+export type QueryMarketplaceTokenByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryMarketplaceTokenByUniqueInputArgs = {
+  where: WhereIdInput;
+};
+
+
+export type QueryMarketplaceTokensArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<MarketplaceTokenOrderByInput>>;
+  where?: InputMaybe<MarketplaceTokenWhereInput>;
+};
+
+
+export type QueryMarketplaceTokensConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy: Array<MarketplaceTokenOrderByInput>;
+  where?: InputMaybe<MarketplaceTokenWhereInput>;
 };
 
 
@@ -9887,6 +10384,12 @@ export type QueryTopSellingChannelsArgs = {
   limit: Scalars['Int']['input'];
   periodDays: Scalars['Int']['input'];
   where?: InputMaybe<ExtendedChannelWhereInput>;
+};
+
+
+export type QueryTopSellingTokenArgs = {
+  periodDays: Scalars['Int']['input'];
+  where?: InputMaybe<CreatorTokenWhereInput>;
 };
 
 
@@ -12331,6 +12834,8 @@ export type Subscription = {
   gatewayConfigs: Array<GatewayConfig>;
   licenseById?: Maybe<License>;
   licenses: Array<License>;
+  marketplaceTokenById?: Maybe<MarketplaceToken>;
+  marketplaceTokens: Array<MarketplaceToken>;
   memberMetadata: Array<MemberMetadata>;
   memberMetadataById?: Maybe<MemberMetadata>;
   membershipById?: Maybe<Membership>;
@@ -12796,6 +13301,19 @@ export type SubscriptionLicensesArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<LicenseOrderByInput>>;
   where?: InputMaybe<LicenseWhereInput>;
+};
+
+
+export type SubscriptionMarketplaceTokenByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type SubscriptionMarketplaceTokensArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<MarketplaceTokenOrderByInput>>;
+  where?: InputMaybe<MarketplaceTokenWhereInput>;
 };
 
 
@@ -13764,6 +14282,12 @@ export type TopSellingChannelsResult = {
   amount: Scalars['String']['output'];
   channel: Channel;
   nftSold: Scalars['Int']['output'];
+};
+
+export type TopSellingTokensReturnType = {
+  __typename: 'TopSellingTokensReturnType';
+  ammVolume: Scalars['String']['output'];
+  creatorToken: CreatorToken;
 };
 
 export type TrailerVideo = {
@@ -16309,6 +16833,14 @@ export type YppVerified = {
   verification: ChannelVerification;
 };
 
+export type GetCreatorTokensQueryVariables = Exact<{
+  start: Scalars['DateTime']['input'];
+  end: Scalars['DateTime']['input'];
+}>;
+
+
+export type GetCreatorTokensQuery = { __typename: 'Query', creatorTokens: Array<{ __typename: 'CreatorToken', createdAt: any }> };
+
 export type GetCrtTransactionsQueryVariables = Exact<{
   start: Scalars['Int']['input'];
   end: Scalars['Int']['input'];
@@ -16337,6 +16869,16 @@ export type GetRevenueSplitAmountsQueryVariables = Exact<{
 export type GetRevenueSplitAmountsQuery = { __typename: 'Query', events: Array<{ __typename: 'Event', data: { __typename: 'AuctionBidCanceledEventData' } | { __typename: 'AuctionBidMadeEventData' } | { __typename: 'AuctionCanceledEventData' } | { __typename: 'BidMadeCompletingAuctionEventData' } | { __typename: 'BuyNowCanceledEventData' } | { __typename: 'BuyNowPriceUpdatedEventData' } | { __typename: 'ChannelAssetsDeletedByModeratorEventData' } | { __typename: 'ChannelCreatedEventData' } | { __typename: 'ChannelFundsWithdrawnEventData' } | { __typename: 'ChannelPaymentMadeEventData' } | { __typename: 'ChannelPayoutsUpdatedEventData' } | { __typename: 'ChannelRewardClaimedAndWithdrawnEventData' } | { __typename: 'ChannelRewardClaimedEventData' } | { __typename: 'CommentCreatedEventData' } | { __typename: 'CommentReactionEventData' } | { __typename: 'CommentTextUpdatedEventData' } | { __typename: 'CreatorTokenIssuedEventData' } | { __typename: 'CreatorTokenMarketBurnEventData' } | { __typename: 'CreatorTokenMarketMintEventData' } | { __typename: 'CreatorTokenMarketStartedEventData' } | { __typename: 'CreatorTokenRevenueSplitIssuedEventData', revenueShare?: { __typename: 'RevenueShare', stakers: Array<{ __typename: 'RevenueShareParticipation', earnings: string }> } | null } | { __typename: 'CreatorTokenSaleMintEventData' } | { __typename: 'CreatorTokenSaleStartedEventData' } | { __typename: 'EnglishAuctionSettledEventData' } | { __typename: 'EnglishAuctionStartedEventData' } | { __typename: 'MemberBannedFromChannelEventData' } | { __typename: 'MetaprotocolTransactionStatusEventData' } | { __typename: 'NftBoughtEventData' } | { __typename: 'NftIssuedEventData' } | { __typename: 'NftOfferedEventData' } | { __typename: 'NftSellOrderMadeEventData' } | { __typename: 'OpenAuctionBidAcceptedEventData' } | { __typename: 'OpenAuctionStartedEventData' } | { __typename: 'VideoAssetsDeletedByModeratorEventData' } | { __typename: 'VideoCreatedEventData' } | { __typename: 'VideoReactionEventData' } }> };
 
 
+export const GetCreatorTokensDocument = gql`
+    query GetCreatorTokens($start: DateTime!, $end: DateTime!) {
+  creatorTokens(
+    where: {createdAt_gte: $start, createdAt_lte: $end}
+    orderBy: createdAt_ASC
+  ) {
+    createdAt
+  }
+}
+    `;
 export const GetCrtTransactionsDocument = gql`
     query GetCrtTransactions($start: Int!, $end: Int!, $limit: Int!, $offset: Int!) {
   ammTransactions(
@@ -16387,6 +16929,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    GetCreatorTokens(variables: GetCreatorTokensQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCreatorTokensQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetCreatorTokensQuery>(GetCreatorTokensDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetCreatorTokens', 'query');
+    },
     GetCrtTransactions(variables: GetCrtTransactionsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCrtTransactionsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetCrtTransactionsQuery>(GetCrtTransactionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetCrtTransactions', 'query');
     },

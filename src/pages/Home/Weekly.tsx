@@ -316,7 +316,7 @@ export default function Weekly() {
       <JoyChart data={nftChart} title="New NFT Minted" id="videoNftChart" />
       <JoyChart
         data={crtChart}
-        title="New circulating creator tokens (in JOY)"
+        title="New circulating creator tokens"
         id="crtChart"
       />
       <JoyChart
