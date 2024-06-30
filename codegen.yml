@@ -1,10 +1,5 @@
 # Run codegen using: npm run generate
 # Make sure schema endpoint is accessible!
-schema:
-  - "https://query.joystream.org/graphql" # Pioneer
-
-documents:
-  - "./src/api/queries/graphql/*.gql"
 
 config:
   scalars:
@@ -16,14 +11,20 @@ config:
 
 generates:
   src/api/queries/__generated__/gql.ts:
+    schema: "https://query.joystream.org/graphql" # Pioneer
+    documents: "./src/api/queries/graphql/*.gql"
     plugins:
       - typescript
       - typescript-operations
       - typescript-graphql-request
   src/api/queries/__generated__/baseTypes.generated.ts:
+    schema: "https://query.joystream.org/graphql" # Pioneer
+    documents: "./src/api/queries/graphql/*.gql"
     plugins:
       - typescript
   src/api/queries/__generated__/:
+    schema: "https://query.joystream.org/graphql" # Pioneer
+    documents: "./src/api/queries/graphql/*.gql"
     preset: near-operation-file
     presetConfig:
       baseTypesPath: baseTypes.generated.ts
@@ -32,3 +33,10 @@ generates:
     plugins:
       - typescript-operations
       - typescript-react-apollo
+  src/api/queries/__generated__/orion.generated.ts:
+    schema: "https://orion.gleev.xyz/graphql" # Orion
+    documents: "./src/api/queries/graphql/orion/*.gql"
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request

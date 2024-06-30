@@ -6,3 +6,4 @@ export * from "./getNonEmptyChannelStatus";
 export * from "./getVideoStatus";
 export * from "./getStorageSize";
 export * from "./getStorageStatus";
+export * from "./getCrtStatus";
