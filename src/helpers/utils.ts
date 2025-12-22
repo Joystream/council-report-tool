@@ -1,3 +1,5 @@
+import { IMGUR_CLIENT_ID } from '@/config'
+
 export const capitalizeFirstLetter = <T extends string>(str: T) =>
   (str.charAt(0).toUpperCase() + str.slice(1)) as Capitalize<T>;
 
@@ -122,7 +124,7 @@ export const uploadImage = async (imgData: string): Promise<string> => {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      Authorization: "Client-ID aeb5866135440bd",
+      Authorization: `Client-ID ${IMGUR_CLIENT_ID}`,
     },
     body: JSON.stringify(body),
   });
