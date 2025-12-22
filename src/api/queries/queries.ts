@@ -907,7 +907,7 @@ export const getWGSpendingWithReceiverID = async (
 
 export const getElectedCouncils = async () => {
   const { GetElectedCouncils } = getSdk(client);
-  const { electedCouncils } = await GetElectedCouncils();
+  const { electedCouncils } = await GetElectedCouncils({ limit: 100 });
   return electedCouncils;
 };
 
