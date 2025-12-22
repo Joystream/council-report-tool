@@ -425,6 +425,17 @@ export type AddVideoViewResult = {
   viewsNum: Scalars['Int']['output'];
 };
 
+export type AgeSubWeights = {
+  __typename: 'AgeSubWeights';
+  joystreamAgeWeight: Scalars['Float']['output'];
+  youtubeAgeWeight: Scalars['Float']['output'];
+};
+
+export type AgeSubWeightsInput = {
+  joystreamAgeWeight: Scalars['Float']['input'];
+  youtubeAgeWeight: Scalars['Float']['input'];
+};
+
 export type AmmCurve = {
   __typename: 'AmmCurve';
   /** the amm intercept parameter b in the formula a * x + b */
@@ -1560,6 +1571,8 @@ export enum BannedMemberOrderByInput {
   ChannelIsExcludedDesc = 'channel_isExcluded_DESC',
   ChannelIsPublicAsc = 'channel_isPublic_ASC',
   ChannelIsPublicDesc = 'channel_isPublic_DESC',
+  ChannelIsYtSyncEnabledAsc = 'channel_isYtSyncEnabled_ASC',
+  ChannelIsYtSyncEnabledDesc = 'channel_isYtSyncEnabled_DESC',
   ChannelLanguageAsc = 'channel_language_ASC',
   ChannelLanguageDesc = 'channel_language_DESC',
   ChannelRevenueShareRatioPercentAsc = 'channel_revenueShareRatioPercent_ASC',
@@ -2021,6 +2034,8 @@ export type Channel = {
   isExcluded: Scalars['Boolean']['output'];
   /** Flag signaling whether a channel is public. */
   isPublic?: Maybe<Scalars['Boolean']['output']>;
+  /** Whether YouTube sync is enabled for this channel */
+  isYtSyncEnabled: Scalars['Boolean']['output'];
   /** The primary langauge of the channel's content */
   language?: Maybe<Scalars['String']['output']>;
   /** Current member-owner of the channel (if owned by a member) */
@@ -2037,8 +2052,8 @@ export type Channel = {
   videoViewsNum: Scalars['Int']['output'];
   /** List of videos that belong to the channel */
   videos: Array<Video>;
-  /** Channel Ypp Status: either unverified , verified or suspended */
-  yppStatus: ChannelYppStatus;
+  /** Channel Ypp Status (if exists): either unverified, verified or suspended */
+  yppStatus?: Maybe<ChannelYppStatus>;
 };
 
 
@@ -2301,6 +2316,8 @@ export enum ChannelOrderByInput {
   IsExcludedDesc = 'isExcluded_DESC',
   IsPublicAsc = 'isPublic_ASC',
   IsPublicDesc = 'isPublic_DESC',
+  IsYtSyncEnabledAsc = 'isYtSyncEnabled_ASC',
+  IsYtSyncEnabledDesc = 'isYtSyncEnabled_DESC',
   LanguageAsc = 'language_ASC',
   LanguageDesc = 'language_DESC',
   OwnerMemberControllerAccountAsc = 'ownerMember_controllerAccount_ASC',
@@ -2327,8 +2344,10 @@ export enum ChannelOrderByInput {
   VideoViewsNumDesc = 'videoViewsNum_DESC',
   YppStatusIsTypeOfAsc = 'yppStatus_isTypeOf_ASC',
   YppStatusIsTypeOfDesc = 'yppStatus_isTypeOf_DESC',
-  YppStatusPhantomAsc = 'yppStatus_phantom_ASC',
-  YppStatusPhantomDesc = 'yppStatus_phantom_DESC'
+  YppStatusTierAsc = 'yppStatus_tier_ASC',
+  YppStatusTierDesc = 'yppStatus_tier_DESC',
+  YppStatusTimestampAsc = 'yppStatus_timestamp_ASC',
+  YppStatusTimestampDesc = 'yppStatus_timestamp_DESC'
 }
 
 /** Direct channel payment by any member by-passing the council payouts */
@@ -2366,6 +2385,23 @@ export type ChannelRecipient = {
   channel: Channel;
 };
 
+export type ChannelRelevanceWeights = {
+  __typename: 'ChannelRelevanceWeights';
+  crtLiquidityWeight: Scalars['Float']['output'];
+  crtVolumeWeight: Scalars['Float']['output'];
+  followersWeight: Scalars['Float']['output'];
+  revenueWeight: Scalars['Float']['output'];
+  yppTierWeight: Scalars['Float']['output'];
+};
+
+export type ChannelRelevanceWeightsInput = {
+  crtLiquidityWeight: Scalars['Float']['input'];
+  crtVolumeWeight: Scalars['Float']['input'];
+  followersWeight: Scalars['Float']['input'];
+  revenueWeight: Scalars['Float']['input'];
+  yppTierWeight: Scalars['Float']['input'];
+};
+
 export type ChannelReportInfo = {
   __typename: 'ChannelReportInfo';
   channelId: Scalars['String']['output'];
@@ -2400,106 +2436,12 @@ export type ChannelSuspended = {
   phantom?: Maybe<Scalars['Int']['output']>;
 };
 
-export type ChannelSuspension = {
-  __typename: 'ChannelSuspension';
-  /** channel suspended */
-  channel: Channel;
-  /** unique Id */
-  id: Scalars['String']['output'];
-  /** timestamp of suspension */
-  timestamp: Scalars['DateTime']['output'];
-};
-
-export type ChannelSuspensionEdge = {
-  __typename: 'ChannelSuspensionEdge';
-  cursor: Scalars['String']['output'];
-  node: ChannelSuspension;
-};
-
-export enum ChannelSuspensionOrderByInput {
-  ChannelChannelStateBloatBondAsc = 'channel_channelStateBloatBond_ASC',
-  ChannelChannelStateBloatBondDesc = 'channel_channelStateBloatBond_DESC',
-  ChannelChannelWeightAsc = 'channel_channelWeight_ASC',
-  ChannelChannelWeightDesc = 'channel_channelWeight_DESC',
-  ChannelCreatedAtAsc = 'channel_createdAt_ASC',
-  ChannelCreatedAtDesc = 'channel_createdAt_DESC',
-  ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
-  ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
-  ChannelCumulativeRevenueAsc = 'channel_cumulativeRevenue_ASC',
-  ChannelCumulativeRevenueDesc = 'channel_cumulativeRevenue_DESC',
-  ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
-  ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
-  ChannelCumulativeRewardAsc = 'channel_cumulativeReward_ASC',
-  ChannelCumulativeRewardDesc = 'channel_cumulativeReward_DESC',
-  ChannelDescriptionAsc = 'channel_description_ASC',
-  ChannelDescriptionDesc = 'channel_description_DESC',
-  ChannelFollowsNumAsc = 'channel_followsNum_ASC',
-  ChannelFollowsNumDesc = 'channel_followsNum_DESC',
-  ChannelIdAsc = 'channel_id_ASC',
-  ChannelIdDesc = 'channel_id_DESC',
-  ChannelIsCensoredAsc = 'channel_isCensored_ASC',
-  ChannelIsCensoredDesc = 'channel_isCensored_DESC',
-  ChannelIsExcludedAsc = 'channel_isExcluded_ASC',
-  ChannelIsExcludedDesc = 'channel_isExcluded_DESC',
-  ChannelIsPublicAsc = 'channel_isPublic_ASC',
-  ChannelIsPublicDesc = 'channel_isPublic_DESC',
-  ChannelLanguageAsc = 'channel_language_ASC',
-  ChannelLanguageDesc = 'channel_language_DESC',
-  ChannelRevenueShareRatioPercentAsc = 'channel_revenueShareRatioPercent_ASC',
-  ChannelRevenueShareRatioPercentDesc = 'channel_revenueShareRatioPercent_DESC',
-  ChannelRewardAccountAsc = 'channel_rewardAccount_ASC',
-  ChannelRewardAccountDesc = 'channel_rewardAccount_DESC',
-  ChannelTitleAsc = 'channel_title_ASC',
-  ChannelTitleDesc = 'channel_title_DESC',
-  ChannelTotalVideosCreatedAsc = 'channel_totalVideosCreated_ASC',
-  ChannelTotalVideosCreatedDesc = 'channel_totalVideosCreated_DESC',
-  ChannelVideoViewsNumAsc = 'channel_videoViewsNum_ASC',
-  ChannelVideoViewsNumDesc = 'channel_videoViewsNum_DESC',
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  TimestampAsc = 'timestamp_ASC',
-  TimestampDesc = 'timestamp_DESC'
+export enum ChannelTier {
+  Bronze = 'BRONZE',
+  Diamond = 'DIAMOND',
+  Gold = 'GOLD',
+  Silver = 'SILVER'
 }
-
-export type ChannelSuspensionWhereInput = {
-  AND?: InputMaybe<Array<ChannelSuspensionWhereInput>>;
-  OR?: InputMaybe<Array<ChannelSuspensionWhereInput>>;
-  channel?: InputMaybe<ChannelWhereInput>;
-  channel_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  id_contains?: InputMaybe<Scalars['String']['input']>;
-  id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  id_endsWith?: InputMaybe<Scalars['String']['input']>;
-  id_eq?: InputMaybe<Scalars['String']['input']>;
-  id_gt?: InputMaybe<Scalars['String']['input']>;
-  id_gte?: InputMaybe<Scalars['String']['input']>;
-  id_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  id_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  id_lt?: InputMaybe<Scalars['String']['input']>;
-  id_lte?: InputMaybe<Scalars['String']['input']>;
-  id_not_contains?: InputMaybe<Scalars['String']['input']>;
-  id_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  id_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  id_not_eq?: InputMaybe<Scalars['String']['input']>;
-  id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  id_startsWith?: InputMaybe<Scalars['String']['input']>;
-  timestamp_eq?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_gt?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_gte?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
-  timestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  timestamp_lt?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_lte?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_not_eq?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
-};
-
-export type ChannelSuspensionsConnection = {
-  __typename: 'ChannelSuspensionsConnection';
-  edges: Array<ChannelSuspensionEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
 
 export type ChannelUnfollowResult = {
   __typename: 'ChannelUnfollowResult';
@@ -2508,122 +2450,10 @@ export type ChannelUnfollowResult = {
   removed: Scalars['Boolean']['output'];
 };
 
-export type ChannelVerification = {
-  __typename: 'ChannelVerification';
-  /** channel verified */
-  channel: Channel;
-  /** unique Id */
-  id: Scalars['String']['output'];
-  /** timestamp of verification */
-  timestamp: Scalars['DateTime']['output'];
-};
-
-export type ChannelVerificationEdge = {
-  __typename: 'ChannelVerificationEdge';
-  cursor: Scalars['String']['output'];
-  node: ChannelVerification;
-};
-
-export enum ChannelVerificationOrderByInput {
-  ChannelChannelStateBloatBondAsc = 'channel_channelStateBloatBond_ASC',
-  ChannelChannelStateBloatBondDesc = 'channel_channelStateBloatBond_DESC',
-  ChannelChannelWeightAsc = 'channel_channelWeight_ASC',
-  ChannelChannelWeightDesc = 'channel_channelWeight_DESC',
-  ChannelCreatedAtAsc = 'channel_createdAt_ASC',
-  ChannelCreatedAtDesc = 'channel_createdAt_DESC',
-  ChannelCreatedInBlockAsc = 'channel_createdInBlock_ASC',
-  ChannelCreatedInBlockDesc = 'channel_createdInBlock_DESC',
-  ChannelCumulativeRevenueAsc = 'channel_cumulativeRevenue_ASC',
-  ChannelCumulativeRevenueDesc = 'channel_cumulativeRevenue_DESC',
-  ChannelCumulativeRewardClaimedAsc = 'channel_cumulativeRewardClaimed_ASC',
-  ChannelCumulativeRewardClaimedDesc = 'channel_cumulativeRewardClaimed_DESC',
-  ChannelCumulativeRewardAsc = 'channel_cumulativeReward_ASC',
-  ChannelCumulativeRewardDesc = 'channel_cumulativeReward_DESC',
-  ChannelDescriptionAsc = 'channel_description_ASC',
-  ChannelDescriptionDesc = 'channel_description_DESC',
-  ChannelFollowsNumAsc = 'channel_followsNum_ASC',
-  ChannelFollowsNumDesc = 'channel_followsNum_DESC',
-  ChannelIdAsc = 'channel_id_ASC',
-  ChannelIdDesc = 'channel_id_DESC',
-  ChannelIsCensoredAsc = 'channel_isCensored_ASC',
-  ChannelIsCensoredDesc = 'channel_isCensored_DESC',
-  ChannelIsExcludedAsc = 'channel_isExcluded_ASC',
-  ChannelIsExcludedDesc = 'channel_isExcluded_DESC',
-  ChannelIsPublicAsc = 'channel_isPublic_ASC',
-  ChannelIsPublicDesc = 'channel_isPublic_DESC',
-  ChannelLanguageAsc = 'channel_language_ASC',
-  ChannelLanguageDesc = 'channel_language_DESC',
-  ChannelRevenueShareRatioPercentAsc = 'channel_revenueShareRatioPercent_ASC',
-  ChannelRevenueShareRatioPercentDesc = 'channel_revenueShareRatioPercent_DESC',
-  ChannelRewardAccountAsc = 'channel_rewardAccount_ASC',
-  ChannelRewardAccountDesc = 'channel_rewardAccount_DESC',
-  ChannelTitleAsc = 'channel_title_ASC',
-  ChannelTitleDesc = 'channel_title_DESC',
-  ChannelTotalVideosCreatedAsc = 'channel_totalVideosCreated_ASC',
-  ChannelTotalVideosCreatedDesc = 'channel_totalVideosCreated_DESC',
-  ChannelVideoViewsNumAsc = 'channel_videoViewsNum_ASC',
-  ChannelVideoViewsNumDesc = 'channel_videoViewsNum_DESC',
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  TimestampAsc = 'timestamp_ASC',
-  TimestampDesc = 'timestamp_DESC'
-}
-
-export type ChannelVerificationWhereInput = {
-  AND?: InputMaybe<Array<ChannelVerificationWhereInput>>;
-  OR?: InputMaybe<Array<ChannelVerificationWhereInput>>;
-  channel?: InputMaybe<ChannelWhereInput>;
-  channel_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  id_contains?: InputMaybe<Scalars['String']['input']>;
-  id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  id_endsWith?: InputMaybe<Scalars['String']['input']>;
-  id_eq?: InputMaybe<Scalars['String']['input']>;
-  id_gt?: InputMaybe<Scalars['String']['input']>;
-  id_gte?: InputMaybe<Scalars['String']['input']>;
-  id_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  id_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  id_lt?: InputMaybe<Scalars['String']['input']>;
-  id_lte?: InputMaybe<Scalars['String']['input']>;
-  id_not_contains?: InputMaybe<Scalars['String']['input']>;
-  id_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  id_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  id_not_eq?: InputMaybe<Scalars['String']['input']>;
-  id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  id_startsWith?: InputMaybe<Scalars['String']['input']>;
-  timestamp_eq?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_gt?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_gte?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
-  timestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  timestamp_lt?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_lte?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_not_eq?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
-};
-
-export type ChannelVerificationsConnection = {
-  __typename: 'ChannelVerificationsConnection';
-  edges: Array<ChannelVerificationEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
 export type ChannelVerified = {
   __typename: 'ChannelVerified';
   /** no data needed as recipient is channel */
   phantom?: Maybe<Scalars['Int']['output']>;
-};
-
-export type ChannelWeight = {
-  __typename: 'ChannelWeight';
-  channelId: Scalars['String']['output'];
-  isApplied: Scalars['Boolean']['output'];
-};
-
-export type ChannelWeightInput = {
-  channelId: Scalars['String']['input'];
-  weight: Scalars['Float']['input'];
 };
 
 export type ChannelWhereInput = {
@@ -2755,6 +2585,9 @@ export type ChannelWhereInput = {
   isPublic_eq?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic_isNull?: InputMaybe<Scalars['Boolean']['input']>;
   isPublic_not_eq?: InputMaybe<Scalars['Boolean']['input']>;
+  isYtSyncEnabled_eq?: InputMaybe<Scalars['Boolean']['input']>;
+  isYtSyncEnabled_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  isYtSyncEnabled_not_eq?: InputMaybe<Scalars['Boolean']['input']>;
   language_contains?: InputMaybe<Scalars['String']['input']>;
   language_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
   language_endsWith?: InputMaybe<Scalars['String']['input']>;
@@ -2842,6 +2675,16 @@ export type ChannelWhereInput = {
   yppStatus_isNull?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export enum ChannelYppInputStatus {
+  Empty = 'Empty',
+  Suspended = 'Suspended',
+  Unverified = 'Unverified',
+  VerifiedBronze = 'VerifiedBronze',
+  VerifiedDiamond = 'VerifiedDiamond',
+  VerifiedGold = 'VerifiedGold',
+  VerifiedSilver = 'VerifiedSilver'
+}
+
 export type ChannelYppStatus = YppSuspended | YppUnverified | YppVerified;
 
 export type ChannelYppStatusWhereInput = {
@@ -2862,19 +2705,20 @@ export type ChannelYppStatusWhereInput = {
   isTypeOf_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   isTypeOf_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   isTypeOf_startsWith?: InputMaybe<Scalars['String']['input']>;
-  phantom_eq?: InputMaybe<Scalars['Int']['input']>;
-  phantom_gt?: InputMaybe<Scalars['Int']['input']>;
-  phantom_gte?: InputMaybe<Scalars['Int']['input']>;
-  phantom_in?: InputMaybe<Array<Scalars['Int']['input']>>;
-  phantom_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  phantom_lt?: InputMaybe<Scalars['Int']['input']>;
-  phantom_lte?: InputMaybe<Scalars['Int']['input']>;
-  phantom_not_eq?: InputMaybe<Scalars['Int']['input']>;
-  phantom_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
-  suspension?: InputMaybe<ChannelSuspensionWhereInput>;
-  suspension_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  verification?: InputMaybe<ChannelVerificationWhereInput>;
-  verification_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tier_eq?: InputMaybe<ChannelTier>;
+  tier_in?: InputMaybe<Array<ChannelTier>>;
+  tier_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tier_not_eq?: InputMaybe<ChannelTier>;
+  tier_not_in?: InputMaybe<Array<ChannelTier>>;
+  timestamp_eq?: InputMaybe<Scalars['DateTime']['input']>;
+  timestamp_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  timestamp_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  timestamp_in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
+  timestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  timestamp_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  timestamp_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  timestamp_not_eq?: InputMaybe<Scalars['DateTime']['input']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
 };
 
 export type ChannelsConnection = {
@@ -2914,10 +2758,16 @@ export type Comment = {
   reactionsCountByReactionId?: Maybe<Array<CommentReactionsCountByReactionId>>;
   /** How many comments has replied to this comment */
   repliesCount: Scalars['Int']['output'];
+  /** Base sort priority of the comment (can be increased by a tip) */
+  sortPriority: Scalars['Int']['output'];
   /** Status of the comment; either it is visible, deleted, or moderated (deleted by moderator) */
   status: CommentStatus;
   /** Comment text */
   text: Scalars['String']['output'];
+  /** Tip included when adding the comment (in HAPI) */
+  tipAmount: Scalars['BigInt']['output'];
+  /** Tier received for adding a tip to the comment (if any) */
+  tipTier?: Maybe<CommentTipTier>;
   /** Video the comment was added to */
   video: Video;
 };
@@ -2979,20 +2829,32 @@ export enum CommentOrderByInput {
   ParentCommentReactionsCountDesc = 'parentComment_reactionsCount_DESC',
   ParentCommentRepliesCountAsc = 'parentComment_repliesCount_ASC',
   ParentCommentRepliesCountDesc = 'parentComment_repliesCount_DESC',
+  ParentCommentSortPriorityAsc = 'parentComment_sortPriority_ASC',
+  ParentCommentSortPriorityDesc = 'parentComment_sortPriority_DESC',
   ParentCommentStatusAsc = 'parentComment_status_ASC',
   ParentCommentStatusDesc = 'parentComment_status_DESC',
   ParentCommentTextAsc = 'parentComment_text_ASC',
   ParentCommentTextDesc = 'parentComment_text_DESC',
+  ParentCommentTipAmountAsc = 'parentComment_tipAmount_ASC',
+  ParentCommentTipAmountDesc = 'parentComment_tipAmount_DESC',
+  ParentCommentTipTierAsc = 'parentComment_tipTier_ASC',
+  ParentCommentTipTierDesc = 'parentComment_tipTier_DESC',
   ReactionsAndRepliesCountAsc = 'reactionsAndRepliesCount_ASC',
   ReactionsAndRepliesCountDesc = 'reactionsAndRepliesCount_DESC',
   ReactionsCountAsc = 'reactionsCount_ASC',
   ReactionsCountDesc = 'reactionsCount_DESC',
   RepliesCountAsc = 'repliesCount_ASC',
   RepliesCountDesc = 'repliesCount_DESC',
+  SortPriorityAsc = 'sortPriority_ASC',
+  SortPriorityDesc = 'sortPriority_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   TextAsc = 'text_ASC',
   TextDesc = 'text_DESC',
+  TipAmountAsc = 'tipAmount_ASC',
+  TipAmountDesc = 'tipAmount_DESC',
+  TipTierAsc = 'tipTier_ASC',
+  TipTierDesc = 'tipTier_DESC',
   VideoCommentsCountAsc = 'video_commentsCount_ASC',
   VideoCommentsCountDesc = 'video_commentsCount_DESC',
   VideoCreatedAtAsc = 'video_createdAt_ASC',
@@ -3100,10 +2962,16 @@ export enum CommentReactionOrderByInput {
   CommentReactionsCountDesc = 'comment_reactionsCount_DESC',
   CommentRepliesCountAsc = 'comment_repliesCount_ASC',
   CommentRepliesCountDesc = 'comment_repliesCount_DESC',
+  CommentSortPriorityAsc = 'comment_sortPriority_ASC',
+  CommentSortPriorityDesc = 'comment_sortPriority_DESC',
   CommentStatusAsc = 'comment_status_ASC',
   CommentStatusDesc = 'comment_status_DESC',
   CommentTextAsc = 'comment_text_ASC',
   CommentTextDesc = 'comment_text_DESC',
+  CommentTipAmountAsc = 'comment_tipAmount_ASC',
+  CommentTipAmountDesc = 'comment_tipAmount_DESC',
+  CommentTipTierAsc = 'comment_tipTier_ASC',
+  CommentTipTierDesc = 'comment_tipTier_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
   MemberControllerAccountAsc = 'member_controllerAccount_ASC',
@@ -3252,6 +3120,19 @@ export type CommentTextUpdatedEventData = {
   newText: Scalars['String']['output'];
 };
 
+export enum CommentTipTier {
+  Diamond = 'DIAMOND',
+  Gold = 'GOLD',
+  Silver = 'SILVER'
+}
+
+export type CommentTipTiers = {
+  __typename: 'CommentTipTiers';
+  DIAMOND: Scalars['Int']['output'];
+  GOLD: Scalars['Int']['output'];
+  SILVER: Scalars['Int']['output'];
+};
+
 export type CommentWhereInput = {
   AND?: InputMaybe<Array<CommentWhereInput>>;
   OR?: InputMaybe<Array<CommentWhereInput>>;
@@ -3322,6 +3203,15 @@ export type CommentWhereInput = {
   repliesCount_lte?: InputMaybe<Scalars['Int']['input']>;
   repliesCount_not_eq?: InputMaybe<Scalars['Int']['input']>;
   repliesCount_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  sortPriority_eq?: InputMaybe<Scalars['Int']['input']>;
+  sortPriority_gt?: InputMaybe<Scalars['Int']['input']>;
+  sortPriority_gte?: InputMaybe<Scalars['Int']['input']>;
+  sortPriority_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  sortPriority_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  sortPriority_lt?: InputMaybe<Scalars['Int']['input']>;
+  sortPriority_lte?: InputMaybe<Scalars['Int']['input']>;
+  sortPriority_not_eq?: InputMaybe<Scalars['Int']['input']>;
+  sortPriority_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
   status_eq?: InputMaybe<CommentStatus>;
   status_in?: InputMaybe<Array<CommentStatus>>;
   status_isNull?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3344,6 +3234,20 @@ export type CommentWhereInput = {
   text_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
   text_not_startsWith?: InputMaybe<Scalars['String']['input']>;
   text_startsWith?: InputMaybe<Scalars['String']['input']>;
+  tipAmount_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  tipAmount_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  tipAmount_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  tipAmount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  tipAmount_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tipAmount_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  tipAmount_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  tipAmount_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
+  tipAmount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  tipTier_eq?: InputMaybe<CommentTipTier>;
+  tipTier_in?: InputMaybe<Array<CommentTipTier>>;
+  tipTier_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  tipTier_not_eq?: InputMaybe<CommentTipTier>;
+  tipTier_not_in?: InputMaybe<Array<CommentTipTier>>;
   video?: InputMaybe<VideoWhereInput>;
   video_isNull?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -3482,7 +3386,7 @@ export type CreatorToken = {
   /** total supply */
   totalSupply: Scalars['BigInt']['output'];
   /** video for the token presentation page */
-  trailerVideo: Array<TrailerVideo>;
+  trailerVideo?: Maybe<TrailerVideo>;
   /** link for creator to member interested in joining the whitelist */
   whitelistApplicantLink?: Maybe<Scalars['String']['output']>;
   /** note from creator to member interested in joining the whitelist */
@@ -3527,14 +3431,6 @@ export type CreatorTokenSalesArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<SaleOrderByInput>>;
   where?: InputMaybe<SaleWhereInput>;
-};
-
-
-export type CreatorTokenTrailerVideoArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<TrailerVideoOrderByInput>>;
-  where?: InputMaybe<TrailerVideoWhereInput>;
 };
 
 export type CreatorTokenEdge = {
@@ -3720,6 +3616,8 @@ export enum CreatorTokenOrderByInput {
   SymbolDesc = 'symbol_DESC',
   TotalSupplyAsc = 'totalSupply_ASC',
   TotalSupplyDesc = 'totalSupply_DESC',
+  TrailerVideoIdAsc = 'trailerVideo_id_ASC',
+  TrailerVideoIdDesc = 'trailerVideo_id_DESC',
   WhitelistApplicantLinkAsc = 'whitelistApplicantLink_ASC',
   WhitelistApplicantLinkDesc = 'whitelistApplicantLink_DESC',
   WhitelistApplicantNoteAsc = 'whitelistApplicantNote_ASC',
@@ -3989,9 +3887,8 @@ export type CreatorTokenWhereInput = {
   totalSupply_lte?: InputMaybe<Scalars['BigInt']['input']>;
   totalSupply_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
   totalSupply_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  trailerVideo_every?: InputMaybe<TrailerVideoWhereInput>;
-  trailerVideo_none?: InputMaybe<TrailerVideoWhereInput>;
-  trailerVideo_some?: InputMaybe<TrailerVideoWhereInput>;
+  trailerVideo?: InputMaybe<TrailerVideoWhereInput>;
+  trailerVideo_isNull?: InputMaybe<Scalars['Boolean']['input']>;
   whitelistApplicantLink_contains?: InputMaybe<Scalars['String']['input']>;
   whitelistApplicantLink_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
   whitelistApplicantLink_endsWith?: InputMaybe<Scalars['String']['input']>;
@@ -4033,6 +3930,11 @@ export type CreatorTokensConnection = {
   edges: Array<CreatorTokenEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
+};
+
+export type CrtMarketCapMinVolume = {
+  __typename: 'CrtMarketCapMinVolume';
+  minVolumeJoy: Scalars['Int']['output'];
 };
 
 export type Curator = {
@@ -5388,149 +5290,9 @@ export enum ExcludableContentType {
   Video = 'Video'
 }
 
-export type ExcludeChannelResult = {
-  __typename: 'ExcludeChannelResult';
-  channelId: Scalars['String']['output'];
-  created: Scalars['Boolean']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  rationale: Scalars['String']['output'];
-};
-
 export type ExcludeContentResult = {
   __typename: 'ExcludeContentResult';
   numberOfEntitiesAffected: Scalars['Int']['output'];
-};
-
-export type ExcludeVideoInfo = {
-  __typename: 'ExcludeVideoInfo';
-  created: Scalars['Boolean']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  rationale: Scalars['String']['output'];
-  videoId: Scalars['String']['output'];
-};
-
-export type Exclusion = {
-  __typename: 'Exclusion';
-  /** If it's a channel exclusion: ID of the channel being reported (the channel may no longer exist) */
-  channelId?: Maybe<Scalars['String']['output']>;
-  /** Unique identifier of the exclusion */
-  id: Scalars['String']['output'];
-  /** Rationale behind the exclusion */
-  rationale: Scalars['String']['output'];
-  /** Time of the exclusion */
-  timestamp: Scalars['DateTime']['output'];
-  /** If it's a video exclusion: ID of the video being reported (the video may no longer exist) */
-  videoId?: Maybe<Scalars['String']['output']>;
-};
-
-export type ExclusionEdge = {
-  __typename: 'ExclusionEdge';
-  cursor: Scalars['String']['output'];
-  node: Exclusion;
-};
-
-export enum ExclusionOrderByInput {
-  ChannelIdAsc = 'channelId_ASC',
-  ChannelIdDesc = 'channelId_DESC',
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  RationaleAsc = 'rationale_ASC',
-  RationaleDesc = 'rationale_DESC',
-  TimestampAsc = 'timestamp_ASC',
-  TimestampDesc = 'timestamp_DESC',
-  VideoIdAsc = 'videoId_ASC',
-  VideoIdDesc = 'videoId_DESC'
-}
-
-export type ExclusionWhereInput = {
-  AND?: InputMaybe<Array<ExclusionWhereInput>>;
-  OR?: InputMaybe<Array<ExclusionWhereInput>>;
-  channelId_contains?: InputMaybe<Scalars['String']['input']>;
-  channelId_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  channelId_endsWith?: InputMaybe<Scalars['String']['input']>;
-  channelId_eq?: InputMaybe<Scalars['String']['input']>;
-  channelId_gt?: InputMaybe<Scalars['String']['input']>;
-  channelId_gte?: InputMaybe<Scalars['String']['input']>;
-  channelId_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  channelId_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  channelId_lt?: InputMaybe<Scalars['String']['input']>;
-  channelId_lte?: InputMaybe<Scalars['String']['input']>;
-  channelId_not_contains?: InputMaybe<Scalars['String']['input']>;
-  channelId_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  channelId_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  channelId_not_eq?: InputMaybe<Scalars['String']['input']>;
-  channelId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  channelId_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  channelId_startsWith?: InputMaybe<Scalars['String']['input']>;
-  id_contains?: InputMaybe<Scalars['String']['input']>;
-  id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  id_endsWith?: InputMaybe<Scalars['String']['input']>;
-  id_eq?: InputMaybe<Scalars['String']['input']>;
-  id_gt?: InputMaybe<Scalars['String']['input']>;
-  id_gte?: InputMaybe<Scalars['String']['input']>;
-  id_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  id_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  id_lt?: InputMaybe<Scalars['String']['input']>;
-  id_lte?: InputMaybe<Scalars['String']['input']>;
-  id_not_contains?: InputMaybe<Scalars['String']['input']>;
-  id_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  id_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  id_not_eq?: InputMaybe<Scalars['String']['input']>;
-  id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  id_startsWith?: InputMaybe<Scalars['String']['input']>;
-  rationale_contains?: InputMaybe<Scalars['String']['input']>;
-  rationale_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  rationale_endsWith?: InputMaybe<Scalars['String']['input']>;
-  rationale_eq?: InputMaybe<Scalars['String']['input']>;
-  rationale_gt?: InputMaybe<Scalars['String']['input']>;
-  rationale_gte?: InputMaybe<Scalars['String']['input']>;
-  rationale_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  rationale_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  rationale_lt?: InputMaybe<Scalars['String']['input']>;
-  rationale_lte?: InputMaybe<Scalars['String']['input']>;
-  rationale_not_contains?: InputMaybe<Scalars['String']['input']>;
-  rationale_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  rationale_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  rationale_not_eq?: InputMaybe<Scalars['String']['input']>;
-  rationale_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  rationale_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  rationale_startsWith?: InputMaybe<Scalars['String']['input']>;
-  timestamp_eq?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_gt?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_gte?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
-  timestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  timestamp_lt?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_lte?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_not_eq?: InputMaybe<Scalars['DateTime']['input']>;
-  timestamp_not_in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
-  videoId_contains?: InputMaybe<Scalars['String']['input']>;
-  videoId_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  videoId_endsWith?: InputMaybe<Scalars['String']['input']>;
-  videoId_eq?: InputMaybe<Scalars['String']['input']>;
-  videoId_gt?: InputMaybe<Scalars['String']['input']>;
-  videoId_gte?: InputMaybe<Scalars['String']['input']>;
-  videoId_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  videoId_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  videoId_lt?: InputMaybe<Scalars['String']['input']>;
-  videoId_lte?: InputMaybe<Scalars['String']['input']>;
-  videoId_not_contains?: InputMaybe<Scalars['String']['input']>;
-  videoId_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
-  videoId_not_endsWith?: InputMaybe<Scalars['String']['input']>;
-  videoId_not_eq?: InputMaybe<Scalars['String']['input']>;
-  videoId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  videoId_not_startsWith?: InputMaybe<Scalars['String']['input']>;
-  videoId_startsWith?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type ExclusionsConnection = {
-  __typename: 'ExclusionsConnection';
-  edges: Array<ExclusionEdge>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
 };
 
 export type ExtendedChannel = {
@@ -5876,15 +5638,16 @@ export type MarketplaceToken = {
   isFeatured: Scalars['Boolean']['output'];
   /** access status invite only vs anyone */
   isInviteOnly: Scalars['Boolean']['output'];
-  lastDayPriceChange?: Maybe<Scalars['BigDecimal']['output']>;
   /** last unit price available */
   lastPrice?: Maybe<Scalars['BigInt']['output']>;
   liquidity?: Maybe<Scalars['Int']['output']>;
+  liquidityChange?: Maybe<Scalars['BigDecimal']['output']>;
   marketCap?: Maybe<Scalars['BigInt']['output']>;
   /** number of revenue shares issued */
   numberOfRevenueShareActivations: Scalars['Int']['output'];
   /** number of vested transfer completed */
   numberOfVestedTransferIssued: Scalars['Int']['output'];
+  priceChange?: Maybe<Scalars['BigDecimal']['output']>;
   /** revenue share ratio between creator and holder */
   revenueShareRatioPermill: Scalars['Int']['output'];
   /** status sale / market / idle */
@@ -5893,7 +5656,6 @@ export type MarketplaceToken = {
   symbol?: Maybe<Scalars['String']['output']>;
   /** total supply */
   totalSupply: Scalars['BigInt']['output'];
-  weeklyLiqChange?: Maybe<Scalars['BigDecimal']['output']>;
   /** link for creator to member interested in joining the whitelist */
   whitelistApplicantLink?: Maybe<Scalars['String']['output']>;
   /** note from creator to member interested in joining the whitelist */
@@ -5944,10 +5706,10 @@ export enum MarketplaceTokenOrderByInput {
   IsFeaturedDesc = 'isFeatured_DESC',
   IsInviteOnlyAsc = 'isInviteOnly_ASC',
   IsInviteOnlyDesc = 'isInviteOnly_DESC',
-  LastDayPriceChangeAsc = 'lastDayPriceChange_ASC',
-  LastDayPriceChangeDesc = 'lastDayPriceChange_DESC',
   LastPriceAsc = 'lastPrice_ASC',
   LastPriceDesc = 'lastPrice_DESC',
+  LiquidityChangeAsc = 'liquidityChange_ASC',
+  LiquidityChangeDesc = 'liquidityChange_DESC',
   LiquidityAsc = 'liquidity_ASC',
   LiquidityDesc = 'liquidity_DESC',
   MarketCapAsc = 'marketCap_ASC',
@@ -5956,6 +5718,8 @@ export enum MarketplaceTokenOrderByInput {
   NumberOfRevenueShareActivationsDesc = 'numberOfRevenueShareActivations_DESC',
   NumberOfVestedTransferIssuedAsc = 'numberOfVestedTransferIssued_ASC',
   NumberOfVestedTransferIssuedDesc = 'numberOfVestedTransferIssued_DESC',
+  PriceChangeAsc = 'priceChange_ASC',
+  PriceChangeDesc = 'priceChange_DESC',
   RevenueShareRatioPermillAsc = 'revenueShareRatioPermill_ASC',
   RevenueShareRatioPermillDesc = 'revenueShareRatioPermill_DESC',
   StatusAsc = 'status_ASC',
@@ -5964,8 +5728,6 @@ export enum MarketplaceTokenOrderByInput {
   SymbolDesc = 'symbol_DESC',
   TotalSupplyAsc = 'totalSupply_ASC',
   TotalSupplyDesc = 'totalSupply_DESC',
-  WeeklyLiqChangeAsc = 'weeklyLiqChange_ASC',
-  WeeklyLiqChangeDesc = 'weeklyLiqChange_DESC',
   WhitelistApplicantLinkAsc = 'whitelistApplicantLink_ASC',
   WhitelistApplicantLinkDesc = 'whitelistApplicantLink_DESC',
   WhitelistApplicantNoteAsc = 'whitelistApplicantNote_ASC',
@@ -6133,15 +5895,6 @@ export type MarketplaceTokenWhereInput = {
   isInviteOnly_eq?: InputMaybe<Scalars['Boolean']['input']>;
   isInviteOnly_isNull?: InputMaybe<Scalars['Boolean']['input']>;
   isInviteOnly_not_eq?: InputMaybe<Scalars['Boolean']['input']>;
-  lastDayPriceChange_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  lastDayPriceChange_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  lastDayPriceChange_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  lastDayPriceChange_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  lastDayPriceChange_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  lastDayPriceChange_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  lastDayPriceChange_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  lastDayPriceChange_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  lastDayPriceChange_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   lastPrice_eq?: InputMaybe<Scalars['BigInt']['input']>;
   lastPrice_gt?: InputMaybe<Scalars['BigInt']['input']>;
   lastPrice_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -6151,6 +5904,15 @@ export type MarketplaceTokenWhereInput = {
   lastPrice_lte?: InputMaybe<Scalars['BigInt']['input']>;
   lastPrice_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
   lastPrice_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  liquidityChange_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityChange_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityChange_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityChange_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  liquidityChange_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  liquidityChange_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityChange_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityChange_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  liquidityChange_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   liquidity_eq?: InputMaybe<Scalars['Int']['input']>;
   liquidity_gt?: InputMaybe<Scalars['Int']['input']>;
   liquidity_gte?: InputMaybe<Scalars['Int']['input']>;
@@ -6187,6 +5949,15 @@ export type MarketplaceTokenWhereInput = {
   numberOfVestedTransferIssued_lte?: InputMaybe<Scalars['Int']['input']>;
   numberOfVestedTransferIssued_not_eq?: InputMaybe<Scalars['Int']['input']>;
   numberOfVestedTransferIssued_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  priceChange_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceChange_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceChange_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceChange_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
+  priceChange_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  priceChange_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceChange_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceChange_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
+  priceChange_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   revenueShareRatioPermill_eq?: InputMaybe<Scalars['Int']['input']>;
   revenueShareRatioPermill_gt?: InputMaybe<Scalars['Int']['input']>;
   revenueShareRatioPermill_gte?: InputMaybe<Scalars['Int']['input']>;
@@ -6227,15 +5998,6 @@ export type MarketplaceTokenWhereInput = {
   totalSupply_lte?: InputMaybe<Scalars['BigInt']['input']>;
   totalSupply_not_eq?: InputMaybe<Scalars['BigInt']['input']>;
   totalSupply_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
-  weeklyLiqChange_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  weeklyLiqChange_gt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  weeklyLiqChange_gte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  weeklyLiqChange_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
-  weeklyLiqChange_isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  weeklyLiqChange_lt?: InputMaybe<Scalars['BigDecimal']['input']>;
-  weeklyLiqChange_lte?: InputMaybe<Scalars['BigDecimal']['input']>;
-  weeklyLiqChange_not_eq?: InputMaybe<Scalars['BigDecimal']['input']>;
-  weeklyLiqChange_not_in?: InputMaybe<Array<Scalars['BigDecimal']['input']>>;
   whitelistApplicantLink_contains?: InputMaybe<Scalars['String']['input']>;
   whitelistApplicantLink_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
   whitelistApplicantLink_endsWith?: InputMaybe<Scalars['String']['input']>;
@@ -6283,8 +6045,6 @@ export type MarketplaceTokensReturnType = {
   __typename: 'MarketplaceTokensReturnType';
   creatorToken: CreatorToken;
   pricePercentageChange: Scalars['Float']['output'];
-  /** Type of the result: hot | cold */
-  resultType: Scalars['String']['output'];
 };
 
 export type MaxAttemptsOnMailDelivery = {
@@ -6722,9 +6482,7 @@ export type MetaprotocolTransactionStatusEventData = {
 export type Mutation = {
   __typename: 'Mutation';
   addVideoView: AddVideoViewResult;
-  excludeChannel: ExcludeChannelResult;
   excludeContent: ExcludeContentResult;
-  excludeVideo: ExcludeVideoInfo;
   followChannel: ChannelFollowResult;
   grantPermissions: GrantOrRevokeOperatorPermissionsResult;
   markNotificationsAsRead: MarkNotificationsAsReadResult;
@@ -6737,23 +6495,24 @@ export type Mutation = {
   setAppAssetStorage: SetNewAppAssetStorageResult;
   setAppNameAlt: SetNewAppNameAltResult;
   setCategoryFeaturedVideos: SetCategoryFeaturedVideosResult;
-  setChannelsWeights: Array<ChannelWeight>;
+  setChannelYoutubeSyncEnabled: SetChannelYtSyncEnabledResult;
+  setChannelYppStatus: Array<SetChannelYppStatusResult>;
+  setCrtMarketCapMinVolume: CrtMarketCapMinVolume;
   setFeaturedCrts: SetFeaturedCrtsResult;
   setFeaturedNfts: SetFeaturedNftsResult;
   setKillSwitch: KillSwitch;
   setMaxAttemptsOnMailDelivery: Scalars['Int']['output'];
   setNewAppRootDomain: AppRootDomain;
   setNewNotificationAssetRoot: SetNewNotificationAssetRootResult;
-  setNewNotificationCenterPath: Scalars['Int']['output'];
   setOrUnsetPublicFeedVideos: SetOrUnsetPublicFeedResult;
+  setRelevanceServiceConfig: SetRelevanceServiceConfigResult;
+  setRelevanceWeights: SetRelevanceWeightsResult;
   setSupportedCategories: SetSupportedCategoriesResult;
+  setTipTierAmounts: CommentTipTiers;
   setVideoHero: SetVideoHeroResult;
   setVideoViewPerUserTimeLimit: VideoViewPerUserTimeLimit;
-  setVideoWeights: VideoWeights;
   signAppActionCommitment: GeneratedSignature;
-  suspendChannels: Array<SuspendChannelResult>;
   unfollowChannel: ChannelUnfollowResult;
-  verifyChannel: VerifyChannelResult;
 };
 
 
@@ -6762,21 +6521,9 @@ export type MutationAddVideoViewArgs = {
 };
 
 
-export type MutationExcludeChannelArgs = {
-  channelId: Scalars['String']['input'];
-  rationale: Scalars['String']['input'];
-};
-
-
 export type MutationExcludeContentArgs = {
   ids: Array<Scalars['String']['input']>;
   type: ExcludableContentType;
-};
-
-
-export type MutationExcludeVideoArgs = {
-  rationale: Scalars['String']['input'];
-  videoId: Scalars['String']['input'];
 };
 
 
@@ -6847,8 +6594,20 @@ export type MutationSetCategoryFeaturedVideosArgs = {
 };
 
 
-export type MutationSetChannelsWeightsArgs = {
-  inputs: Array<ChannelWeightInput>;
+export type MutationSetChannelYoutubeSyncEnabledArgs = {
+  ids: Array<Scalars['String']['input']>;
+  isYtSyncEnabled: Scalars['Boolean']['input'];
+};
+
+
+export type MutationSetChannelYppStatusArgs = {
+  channels: Array<SetChannelYppStatusInput>;
+  skipNotification?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationSetCrtMarketCapMinVolumeArgs = {
+  minVolumeJoy: Scalars['Int']['input'];
 };
 
 
@@ -6882,14 +6641,25 @@ export type MutationSetNewNotificationAssetRootArgs = {
 };
 
 
-export type MutationSetNewNotificationCenterPathArgs = {
-  newMaxAttempts: Scalars['Int']['input'];
-};
-
-
 export type MutationSetOrUnsetPublicFeedVideosArgs = {
   operation: PublicFeedOperationType;
   videoIds: Array<Scalars['String']['input']>;
+};
+
+
+export type MutationSetRelevanceServiceConfigArgs = {
+  ageScoreHalvingDays?: InputMaybe<Scalars['Int']['input']>;
+  channelsPerIteration?: InputMaybe<Scalars['Int']['input']>;
+  populateBackgroundQueueInterval?: InputMaybe<Scalars['Int']['input']>;
+  updateLoopInterval?: InputMaybe<Scalars['Int']['input']>;
+  videosPerChannelLimit?: InputMaybe<Scalars['Int']['input']>;
+  videosPerChannelSelectTop?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type MutationSetRelevanceWeightsArgs = {
+  channel?: InputMaybe<ChannelRelevanceWeightsInput>;
+  video?: InputMaybe<VideoRelevanceWeightsInput>;
 };
 
 
@@ -6897,6 +6667,13 @@ export type MutationSetSupportedCategoriesArgs = {
   supportNewCategories?: InputMaybe<Scalars['Boolean']['input']>;
   supportNoCategoryVideos?: InputMaybe<Scalars['Boolean']['input']>;
   supportedCategoriesIds?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type MutationSetTipTierAmountsArgs = {
+  DIAMOND?: InputMaybe<Scalars['Int']['input']>;
+  GOLD?: InputMaybe<Scalars['Int']['input']>;
+  SILVER?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -6913,17 +6690,6 @@ export type MutationSetVideoViewPerUserTimeLimitArgs = {
 };
 
 
-export type MutationSetVideoWeightsArgs = {
-  commentsWeight: Scalars['Float']['input'];
-  defaultChannelWeight: Scalars['Float']['input'];
-  joysteamTimestampSubWeight: Scalars['Float']['input'];
-  newnessWeight: Scalars['Float']['input'];
-  reactionsWeight: Scalars['Float']['input'];
-  viewsWeight: Scalars['Float']['input'];
-  ytTimestampSubWeight: Scalars['Float']['input'];
-};
-
-
 export type MutationSignAppActionCommitmentArgs = {
   actionType: AppActionActionType;
   assets: Scalars['String']['input'];
@@ -6933,18 +6699,8 @@ export type MutationSignAppActionCommitmentArgs = {
 };
 
 
-export type MutationSuspendChannelsArgs = {
-  channelIds: Array<Scalars['String']['input']>;
-};
-
-
 export type MutationUnfollowChannelArgs = {
   channelId: Scalars['String']['input'];
-};
-
-
-export type MutationVerifyChannelArgs = {
-  channelIds: Array<Scalars['String']['input']>;
 };
 
 export type NewAuction = {
@@ -8256,16 +8012,22 @@ export enum OperatorPermission {
   GrantOperatorPermissions = 'GRANT_OPERATOR_PERMISSIONS',
   RestoreContent = 'RESTORE_CONTENT',
   RevokeOperatorPermissions = 'REVOKE_OPERATOR_PERMISSIONS',
+  SetAppConfigs = 'SET_APP_CONFIGS',
   SetCategoryFeaturedVideos = 'SET_CATEGORY_FEATURED_VIDEOS',
-  SetChannelWeights = 'SET_CHANNEL_WEIGHTS',
+  SetChannelYppStatus = 'SET_CHANNEL_YPP_STATUS',
+  SetCrtMarketcapMinVolume = 'SET_CRT_MARKETCAP_MIN_VOLUME',
   SetFeaturedCrts = 'SET_FEATURED_CRTS',
   SetFeaturedNfts = 'SET_FEATURED_NFTS',
   SetKillSwitch = 'SET_KILL_SWITCH',
   SetPublicFeedVideos = 'SET_PUBLIC_FEED_VIDEOS',
+  SetRelevanceConfig = 'SET_RELEVANCE_CONFIG',
+  SetRelevanceWeights = 'SET_RELEVANCE_WEIGHTS',
   SetSupportedCategories = 'SET_SUPPORTED_CATEGORIES',
+  SetTipTiers = 'SET_TIP_TIERS',
   SetVideoHero = 'SET_VIDEO_HERO',
   SetVideoViewPerUserTimeLimit = 'SET_VIDEO_VIEW_PER_USER_TIME_LIMIT',
-  SetVideoWeights = 'SET_VIDEO_WEIGHTS'
+  ViewAdminSchema = 'VIEW_ADMIN_SCHEMA',
+  ViewCuratorSchema = 'VIEW_CURATOR_SCHEMA'
 }
 
 /** Represents NFT details */
@@ -8585,16 +8347,6 @@ export type Query = {
   channelFollows: Array<ChannelFollow>;
   channelFollowsConnection: ChannelFollowsConnection;
   channelNftCollectors: Array<ChannelNftCollector>;
-  channelSuspensionById?: Maybe<ChannelSuspension>;
-  /** @deprecated Use channelSuspensionById */
-  channelSuspensionByUniqueInput?: Maybe<ChannelSuspension>;
-  channelSuspensions: Array<ChannelSuspension>;
-  channelSuspensionsConnection: ChannelSuspensionsConnection;
-  channelVerificationById?: Maybe<ChannelVerification>;
-  /** @deprecated Use channelVerificationById */
-  channelVerificationByUniqueInput?: Maybe<ChannelVerification>;
-  channelVerifications: Array<ChannelVerification>;
-  channelVerificationsConnection: ChannelVerificationsConnection;
   channels: Array<Channel>;
   channelsConnection: ChannelsConnection;
   commentById?: Maybe<Comment>;
@@ -8669,11 +8421,6 @@ export type Query = {
   eventByUniqueInput?: Maybe<Event>;
   events: Array<Event>;
   eventsConnection: EventsConnection;
-  exclusionById?: Maybe<Exclusion>;
-  /** @deprecated Use exclusionById */
-  exclusionByUniqueInput?: Maybe<Exclusion>;
-  exclusions: Array<Exclusion>;
-  exclusionsConnection: ExclusionsConnection;
   extendedChannels: Array<ExtendedChannel>;
   extendedVideoCategories: Array<ExtendedVideoCategory>;
   gatewayConfigById?: Maybe<GatewayConfig>;
@@ -8687,7 +8434,7 @@ export type Query = {
   getMarketplaceTokens: Array<MarketplaceToken>;
   getMarketplaceTokensCount: MarketplaceTokenCount;
   getShareDividend: GetShareDividendsResult;
-  hotAndColdTokens: Array<MarketplaceTokensReturnType>;
+  getTopInteractedEntities: Array<TopInteractedEntity>;
   licenseById?: Maybe<License>;
   /** @deprecated Use licenseById */
   licenseByUniqueInput?: Maybe<License>;
@@ -8801,6 +8548,7 @@ export type Query = {
   storageDataObjectByUniqueInput?: Maybe<StorageDataObject>;
   storageDataObjects: Array<StorageDataObject>;
   storageDataObjectsConnection: StorageDataObjectsConnection;
+  tipTiers: CommentTipTiers;
   tokenAccountById?: Maybe<TokenAccount>;
   /** @deprecated Use tokenAccountById */
   tokenAccountByUniqueInput?: Maybe<TokenAccount>;
@@ -8816,6 +8564,7 @@ export type Query = {
   tokenChannelsConnection: TokenChannelsConnection;
   tokens: Array<Token>;
   tokensConnection: TokensConnection;
+  tokensWithPriceChange: Array<MarketplaceTokensReturnType>;
   topSellingChannels: Array<TopSellingChannelsResult>;
   topSellingToken: Array<TopSellingTokensReturnType>;
   totalJoystreamEarnings: EarningStatsOutput;
@@ -8827,6 +8576,11 @@ export type Query = {
   userById?: Maybe<User>;
   /** @deprecated Use userById */
   userByUniqueInput?: Maybe<User>;
+  userInteractionCountById?: Maybe<UserInteractionCount>;
+  /** @deprecated Use userInteractionCountById */
+  userInteractionCountByUniqueInput?: Maybe<UserInteractionCount>;
+  userInteractionCounts: Array<UserInteractionCount>;
+  userInteractionCountsConnection: UserInteractionCountsConnection;
   users: Array<User>;
   usersConnection: UsersConnection;
   vestedAccountById?: Maybe<VestedAccount>;
@@ -9167,58 +8921,6 @@ export type QueryChannelNftCollectorsArgs = {
   channelId: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<ChannelNftCollectorsOrderByInput>;
-};
-
-
-export type QueryChannelSuspensionByIdArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryChannelSuspensionByUniqueInputArgs = {
-  where: WhereIdInput;
-};
-
-
-export type QueryChannelSuspensionsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ChannelSuspensionOrderByInput>>;
-  where?: InputMaybe<ChannelSuspensionWhereInput>;
-};
-
-
-export type QueryChannelSuspensionsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy: Array<ChannelSuspensionOrderByInput>;
-  where?: InputMaybe<ChannelSuspensionWhereInput>;
-};
-
-
-export type QueryChannelVerificationByIdArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryChannelVerificationByUniqueInputArgs = {
-  where: WhereIdInput;
-};
-
-
-export type QueryChannelVerificationsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ChannelVerificationOrderByInput>>;
-  where?: InputMaybe<ChannelVerificationWhereInput>;
-};
-
-
-export type QueryChannelVerificationsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy: Array<ChannelVerificationOrderByInput>;
-  where?: InputMaybe<ChannelVerificationWhereInput>;
 };
 
 
@@ -9616,32 +9318,6 @@ export type QueryEventsConnectionArgs = {
 };
 
 
-export type QueryExclusionByIdArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryExclusionByUniqueInputArgs = {
-  where: WhereIdInput;
-};
-
-
-export type QueryExclusionsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ExclusionOrderByInput>>;
-  where?: InputMaybe<ExclusionWhereInput>;
-};
-
-
-export type QueryExclusionsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy: Array<ExclusionOrderByInput>;
-  where?: InputMaybe<ExclusionWhereInput>;
-};
-
-
 export type QueryExtendedChannelsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ChannelOrderByInput>>;
@@ -9706,9 +9382,9 @@ export type QueryGetShareDividendArgs = {
 };
 
 
-export type QueryHotAndColdTokensArgs = {
-  periodDays: Scalars['Int']['input'];
-  where?: InputMaybe<CreatorTokenWhereInput>;
+export type QueryGetTopInteractedEntitiesArgs = {
+  period: Scalars['Int']['input'];
+  type: Scalars['String']['input'];
 };
 
 
@@ -10380,6 +10056,15 @@ export type QueryTokensConnectionArgs = {
 };
 
 
+export type QueryTokensWithPriceChangeArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  minVolume?: InputMaybe<Scalars['BigInt']['input']>;
+  orderByPriceDesc?: InputMaybe<Scalars['Boolean']['input']>;
+  periodDays: Scalars['Int']['input'];
+  where?: InputMaybe<CreatorTokenWhereInput>;
+};
+
+
 export type QueryTopSellingChannelsArgs = {
   limit: Scalars['Int']['input'];
   periodDays: Scalars['Int']['input'];
@@ -10388,6 +10073,9 @@ export type QueryTopSellingChannelsArgs = {
 
 
 export type QueryTopSellingTokenArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  minVolume?: InputMaybe<Scalars['BigInt']['input']>;
+  orderByPriceDesc?: InputMaybe<Scalars['Boolean']['input']>;
   periodDays: Scalars['Int']['input'];
   where?: InputMaybe<CreatorTokenWhereInput>;
 };
@@ -10426,6 +10114,32 @@ export type QueryUserByIdArgs = {
 
 export type QueryUserByUniqueInputArgs = {
   where: WhereIdInput;
+};
+
+
+export type QueryUserInteractionCountByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryUserInteractionCountByUniqueInputArgs = {
+  where: WhereIdInput;
+};
+
+
+export type QueryUserInteractionCountsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserInteractionCountOrderByInput>>;
+  where?: InputMaybe<UserInteractionCountWhereInput>;
+};
+
+
+export type QueryUserInteractionCountsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy: Array<UserInteractionCountOrderByInput>;
+  where?: InputMaybe<UserInteractionCountWhereInput>;
 };
 
 
@@ -10840,6 +10554,22 @@ export type RecipientTypeWhereInput = {
   isTypeOf_startsWith?: InputMaybe<Scalars['String']['input']>;
   membership?: InputMaybe<MembershipWhereInput>;
   membership_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type RelevanceServiceConfig = {
+  __typename: 'RelevanceServiceConfig';
+  ageScoreHalvingDays: Scalars['Int']['output'];
+  channelsPerIteration: Scalars['Int']['output'];
+  populateBackgroundQueueInterval: Scalars['Int']['output'];
+  updateLoopInterval: Scalars['Int']['output'];
+  videosPerChannelLimit: Scalars['Int']['output'];
+  videosPerChannelSelectTop: Scalars['Int']['output'];
+};
+
+export type RelevanceWeights = {
+  __typename: 'RelevanceWeights';
+  channel: ChannelRelevanceWeights;
+  video: VideoRelevanceWeights;
 };
 
 export type Report = {
@@ -11963,6 +11693,26 @@ export type SetCategoryFeaturedVideosResult = {
   numberOfFeaturedVideosUnset: Scalars['Int']['output'];
 };
 
+export type SetChannelYppStatusInput = {
+  id: Scalars['String']['input'];
+  status: ChannelYppInputStatus;
+};
+
+export type SetChannelYppStatusResult = {
+  __typename: 'SetChannelYppStatusResult';
+  id: Scalars['String']['output'];
+  newStatus: ChannelYppInputStatus;
+  notificationAdded: Scalars['Boolean']['output'];
+  previousStatus: ChannelYppInputStatus;
+  timestamp?: Maybe<Scalars['DateTime']['output']>;
+  updated: Scalars['Boolean']['output'];
+};
+
+export type SetChannelYtSyncEnabledResult = {
+  __typename: 'SetChannelYtSyncEnabledResult';
+  updatedChannels: Scalars['Int']['output'];
+};
+
 export type SetFeaturedCrtsResult = {
   __typename: 'SetFeaturedCrtsResult';
   /** The updated number of crts that are now explicitly featured by the Gateway */
@@ -11996,6 +11746,16 @@ export type SetNewNotificationAssetRootResult = {
 export type SetOrUnsetPublicFeedResult = {
   __typename: 'SetOrUnsetPublicFeedResult';
   numberOfEntitiesAffected: Scalars['Int']['output'];
+};
+
+export type SetRelevanceServiceConfigResult = {
+  __typename: 'SetRelevanceServiceConfigResult';
+  updatedConfig: RelevanceServiceConfig;
+};
+
+export type SetRelevanceWeightsResult = {
+  __typename: 'SetRelevanceWeightsResult';
+  updatedWeights: RelevanceWeights;
 };
 
 export type SetSupportedCategoriesResult = {
@@ -12795,10 +12555,6 @@ export type Subscription = {
   channelById?: Maybe<Channel>;
   channelFollowById?: Maybe<ChannelFollow>;
   channelFollows: Array<ChannelFollow>;
-  channelSuspensionById?: Maybe<ChannelSuspension>;
-  channelSuspensions: Array<ChannelSuspension>;
-  channelVerificationById?: Maybe<ChannelVerification>;
-  channelVerifications: Array<ChannelVerification>;
   channels: Array<Channel>;
   commentById?: Maybe<Comment>;
   commentReactionById?: Maybe<CommentReaction>;
@@ -12828,8 +12584,6 @@ export type Subscription = {
   encryptionArtifactsById?: Maybe<EncryptionArtifacts>;
   eventById?: Maybe<Event>;
   events: Array<Event>;
-  exclusionById?: Maybe<Exclusion>;
-  exclusions: Array<Exclusion>;
   gatewayConfigById?: Maybe<GatewayConfig>;
   gatewayConfigs: Array<GatewayConfig>;
   licenseById?: Maybe<License>;
@@ -12886,6 +12640,8 @@ export type Subscription = {
   trailerVideoById?: Maybe<TrailerVideo>;
   trailerVideos: Array<TrailerVideo>;
   userById?: Maybe<User>;
+  userInteractionCountById?: Maybe<UserInteractionCount>;
+  userInteractionCounts: Array<UserInteractionCount>;
   users: Array<User>;
   vestedAccountById?: Maybe<VestedAccount>;
   vestedAccounts: Array<VestedAccount>;
@@ -13046,32 +12802,6 @@ export type SubscriptionChannelFollowsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<ChannelFollowOrderByInput>>;
   where?: InputMaybe<ChannelFollowWhereInput>;
-};
-
-
-export type SubscriptionChannelSuspensionByIdArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type SubscriptionChannelSuspensionsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ChannelSuspensionOrderByInput>>;
-  where?: InputMaybe<ChannelSuspensionWhereInput>;
-};
-
-
-export type SubscriptionChannelVerificationByIdArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type SubscriptionChannelVerificationsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ChannelVerificationOrderByInput>>;
-  where?: InputMaybe<ChannelVerificationWhereInput>;
 };
 
 
@@ -13262,19 +12992,6 @@ export type SubscriptionEventsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventOrderByInput>>;
   where?: InputMaybe<EventWhereInput>;
-};
-
-
-export type SubscriptionExclusionByIdArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type SubscriptionExclusionsArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<ExclusionOrderByInput>>;
-  where?: InputMaybe<ExclusionWhereInput>;
 };
 
 
@@ -13634,6 +13351,19 @@ export type SubscriptionUserByIdArgs = {
 };
 
 
+export type SubscriptionUserInteractionCountByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type SubscriptionUserInteractionCountsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserInteractionCountOrderByInput>>;
+  where?: InputMaybe<UserInteractionCountWhereInput>;
+};
+
+
 export type SubscriptionUsersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -13795,13 +13525,6 @@ export type SubscriptionVideosArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<VideoOrderByInput>>;
   where?: InputMaybe<VideoWhereInput>;
-};
-
-export type SuspendChannelResult = {
-  __typename: 'SuspendChannelResult';
-  channelId: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
 };
 
 export type Token = {
@@ -14099,6 +13822,8 @@ export enum TokenChannelOrderByInput {
   ChannelIsExcludedDesc = 'channel_isExcluded_DESC',
   ChannelIsPublicAsc = 'channel_isPublic_ASC',
   ChannelIsPublicDesc = 'channel_isPublic_DESC',
+  ChannelIsYtSyncEnabledAsc = 'channel_isYtSyncEnabled_ASC',
+  ChannelIsYtSyncEnabledDesc = 'channel_isYtSyncEnabled_DESC',
   ChannelLanguageAsc = 'channel_language_ASC',
   ChannelLanguageDesc = 'channel_language_DESC',
   ChannelRevenueShareRatioPercentAsc = 'channel_revenueShareRatioPercent_ASC',
@@ -14275,6 +14000,12 @@ export type TokensConnection = {
   edges: Array<TokenEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
+};
+
+export type TopInteractedEntity = {
+  __typename: 'TopInteractedEntity';
+  entityId: Scalars['String']['output'];
+  interactionCount: Scalars['Float']['output'];
 };
 
 export type TopSellingChannelsResult = {
@@ -14563,6 +14294,120 @@ export type UserEdge = {
   node: User;
 };
 
+export type UserInteractionCount = {
+  __typename: 'UserInteractionCount';
+  /** Count of the interactions */
+  count: Scalars['Int']['output'];
+  /** Timestamp of the day that is used to count the interactions */
+  dayTimestamp: Scalars['DateTime']['output'];
+  /** ID of the entity that the event is related to for 'tokenMarketplaceEntry' it would be token ID */
+  entityId?: Maybe<Scalars['String']['output']>;
+  /** Autoincremented ID */
+  id: Scalars['String']['output'];
+  /** Type of the user interaction eg. 'tokenMarketplaceEntry' */
+  type?: Maybe<Scalars['String']['output']>;
+};
+
+export type UserInteractionCountEdge = {
+  __typename: 'UserInteractionCountEdge';
+  cursor: Scalars['String']['output'];
+  node: UserInteractionCount;
+};
+
+export enum UserInteractionCountOrderByInput {
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DayTimestampAsc = 'dayTimestamp_ASC',
+  DayTimestampDesc = 'dayTimestamp_DESC',
+  EntityIdAsc = 'entityId_ASC',
+  EntityIdDesc = 'entityId_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC'
+}
+
+export type UserInteractionCountWhereInput = {
+  AND?: InputMaybe<Array<UserInteractionCountWhereInput>>;
+  OR?: InputMaybe<Array<UserInteractionCountWhereInput>>;
+  count_eq?: InputMaybe<Scalars['Int']['input']>;
+  count_gt?: InputMaybe<Scalars['Int']['input']>;
+  count_gte?: InputMaybe<Scalars['Int']['input']>;
+  count_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  count_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  count_lt?: InputMaybe<Scalars['Int']['input']>;
+  count_lte?: InputMaybe<Scalars['Int']['input']>;
+  count_not_eq?: InputMaybe<Scalars['Int']['input']>;
+  count_not_in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  dayTimestamp_eq?: InputMaybe<Scalars['DateTime']['input']>;
+  dayTimestamp_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  dayTimestamp_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  dayTimestamp_in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
+  dayTimestamp_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  dayTimestamp_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  dayTimestamp_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  dayTimestamp_not_eq?: InputMaybe<Scalars['DateTime']['input']>;
+  dayTimestamp_not_in?: InputMaybe<Array<Scalars['DateTime']['input']>>;
+  entityId_contains?: InputMaybe<Scalars['String']['input']>;
+  entityId_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  entityId_endsWith?: InputMaybe<Scalars['String']['input']>;
+  entityId_eq?: InputMaybe<Scalars['String']['input']>;
+  entityId_gt?: InputMaybe<Scalars['String']['input']>;
+  entityId_gte?: InputMaybe<Scalars['String']['input']>;
+  entityId_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  entityId_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  entityId_lt?: InputMaybe<Scalars['String']['input']>;
+  entityId_lte?: InputMaybe<Scalars['String']['input']>;
+  entityId_not_contains?: InputMaybe<Scalars['String']['input']>;
+  entityId_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  entityId_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  entityId_not_eq?: InputMaybe<Scalars['String']['input']>;
+  entityId_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  entityId_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  entityId_startsWith?: InputMaybe<Scalars['String']['input']>;
+  id_contains?: InputMaybe<Scalars['String']['input']>;
+  id_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  id_endsWith?: InputMaybe<Scalars['String']['input']>;
+  id_eq?: InputMaybe<Scalars['String']['input']>;
+  id_gt?: InputMaybe<Scalars['String']['input']>;
+  id_gte?: InputMaybe<Scalars['String']['input']>;
+  id_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  id_lt?: InputMaybe<Scalars['String']['input']>;
+  id_lte?: InputMaybe<Scalars['String']['input']>;
+  id_not_contains?: InputMaybe<Scalars['String']['input']>;
+  id_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  id_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  id_not_eq?: InputMaybe<Scalars['String']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  id_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  id_startsWith?: InputMaybe<Scalars['String']['input']>;
+  type_contains?: InputMaybe<Scalars['String']['input']>;
+  type_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  type_endsWith?: InputMaybe<Scalars['String']['input']>;
+  type_eq?: InputMaybe<Scalars['String']['input']>;
+  type_gt?: InputMaybe<Scalars['String']['input']>;
+  type_gte?: InputMaybe<Scalars['String']['input']>;
+  type_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  type_isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  type_lt?: InputMaybe<Scalars['String']['input']>;
+  type_lte?: InputMaybe<Scalars['String']['input']>;
+  type_not_contains?: InputMaybe<Scalars['String']['input']>;
+  type_not_containsInsensitive?: InputMaybe<Scalars['String']['input']>;
+  type_not_endsWith?: InputMaybe<Scalars['String']['input']>;
+  type_not_eq?: InputMaybe<Scalars['String']['input']>;
+  type_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  type_not_startsWith?: InputMaybe<Scalars['String']['input']>;
+  type_startsWith?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UserInteractionCountsConnection = {
+  __typename: 'UserInteractionCountsConnection';
+  edges: Array<UserInteractionCountEdge>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
+};
+
 export enum UserOrderByInput {
   AccountEmailAsc = 'account_email_ASC',
   AccountEmailDesc = 'account_email_DESC',
@@ -14632,13 +14477,6 @@ export type UsersConnection = {
   edges: Array<UserEdge>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
-};
-
-export type VerifyChannelResult = {
-  __typename: 'VerifyChannelResult';
-  channelId: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
 };
 
 export type VestedAccount = {
@@ -15931,6 +15769,8 @@ export enum VideoOrderByInput {
   ChannelIsExcludedDesc = 'channel_isExcluded_DESC',
   ChannelIsPublicAsc = 'channel_isPublic_ASC',
   ChannelIsPublicDesc = 'channel_isPublic_DESC',
+  ChannelIsYtSyncEnabledAsc = 'channel_isYtSyncEnabled_ASC',
+  ChannelIsYtSyncEnabledDesc = 'channel_isYtSyncEnabled_DESC',
   ChannelLanguageAsc = 'channel_language_ASC',
   ChannelLanguageDesc = 'channel_language_DESC',
   ChannelRevenueShareRatioPercentAsc = 'channel_revenueShareRatioPercent_ASC',
@@ -16061,10 +15901,16 @@ export enum VideoOrderByInput {
   PinnedCommentReactionsCountDesc = 'pinnedComment_reactionsCount_DESC',
   PinnedCommentRepliesCountAsc = 'pinnedComment_repliesCount_ASC',
   PinnedCommentRepliesCountDesc = 'pinnedComment_repliesCount_DESC',
+  PinnedCommentSortPriorityAsc = 'pinnedComment_sortPriority_ASC',
+  PinnedCommentSortPriorityDesc = 'pinnedComment_sortPriority_DESC',
   PinnedCommentStatusAsc = 'pinnedComment_status_ASC',
   PinnedCommentStatusDesc = 'pinnedComment_status_DESC',
   PinnedCommentTextAsc = 'pinnedComment_text_ASC',
   PinnedCommentTextDesc = 'pinnedComment_text_DESC',
+  PinnedCommentTipAmountAsc = 'pinnedComment_tipAmount_ASC',
+  PinnedCommentTipAmountDesc = 'pinnedComment_tipAmount_DESC',
+  PinnedCommentTipTierAsc = 'pinnedComment_tipTier_ASC',
+  PinnedCommentTipTierDesc = 'pinnedComment_tipTier_DESC',
   PublishedBeforeJoystreamAsc = 'publishedBeforeJoystream_ASC',
   PublishedBeforeJoystreamDesc = 'publishedBeforeJoystream_DESC',
   ReactionsCountAsc = 'reactionsCount_ASC',
@@ -16262,6 +16108,23 @@ export type VideoReactionsCountByReactionType = {
   count: Scalars['Int']['output'];
   /** The reaction option */
   reaction: VideoReactionOptions;
+};
+
+export type VideoRelevanceWeights = {
+  __typename: 'VideoRelevanceWeights';
+  ageSubWeights: AgeSubWeights;
+  ageWeight: Scalars['Float']['output'];
+  commentsWeight: Scalars['Float']['output'];
+  reactionsWeight: Scalars['Float']['output'];
+  viewsWeight: Scalars['Float']['output'];
+};
+
+export type VideoRelevanceWeightsInput = {
+  ageSubWeights: AgeSubWeightsInput;
+  ageWeight: Scalars['Float']['input'];
+  commentsWeight: Scalars['Float']['input'];
+  reactionsWeight: Scalars['Float']['input'];
+  viewsWeight: Scalars['Float']['input'];
 };
 
 export type VideoReportInfo = {
@@ -16547,11 +16410,6 @@ export type VideoViewPerUserTimeLimit = {
   limitInSeconds: Scalars['Int']['output'];
 };
 
-export type VideoWeights = {
-  __typename: 'VideoWeights';
-  isApplied: Scalars['Boolean']['output'];
-};
-
 export type VideoWhereInput = {
   AND?: InputMaybe<Array<VideoWhereInput>>;
   OR?: InputMaybe<Array<VideoWhereInput>>;
@@ -16820,17 +16678,18 @@ export type WhereIdInput = {
 
 export type YppSuspended = {
   __typename: 'YppSuspended';
-  suspension: ChannelSuspension;
+  timestamp: Scalars['DateTime']['output'];
 };
 
 export type YppUnverified = {
   __typename: 'YppUnverified';
-  phantom?: Maybe<Scalars['Int']['output']>;
+  timestamp: Scalars['DateTime']['output'];
 };
 
 export type YppVerified = {
   __typename: 'YppVerified';
-  verification: ChannelVerification;
+  tier: ChannelTier;
+  timestamp: Scalars['DateTime']['output'];
 };
 
 export type GetCreatorTokensQueryVariables = Exact<{
